@@ -13,9 +13,13 @@ export const SITE = {
    * photograph — the moment the whole story turns on.
    */
   heroPhoto: 'assets/photos/2014.jpg',
-  /** Absolute or root-relative URL used for the social preview card. */
-  ogImage: 'assets/og-cover.jpg',
-  baseUrl: 'https://messi-albiceleste-journey.vercel.app/',
+  /**
+   * Absolute URL used for the social preview card. Scrapers (X, Facebook,
+   * WhatsApp, Slack, iMessage) do not resolve relative og:image paths, so this
+   * must stay absolute and match index.html.
+   */
+  ogImage: 'https://crisfeng0309-ux.github.io/messi-albiceleste-journey/assets/og-cover.jpg',
+  siteUrl: 'https://crisfeng0309-ux.github.io/messi-albiceleste-journey/',
 };
 
 /** The date the editorial numbers were last reconciled against published records. */

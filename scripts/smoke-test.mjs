@@ -41,11 +41,26 @@ for (const t of targets) {
     );
     if (t === '/' && buf) {
       const html = buf.toString('utf8');
-      for (const needle of ['MESSI', 'ARGENTINA', 'og:image', 'ENTER THE JOURNEY', 'id="years"']) {
+      const absolute = /^https?:\/\//.test(base);
+      const needles = ['MESSI', 'ARGENTINA', 'og:image', 'ENTER THE JOURNEY', 'id="years"'];
+      for (const needle of needles) {
         const has = html.includes(needle);
         if (!has) fail++;
         console.log(`   ${has ? '✓' : '✗'} index.html contains ${needle}`);
       }
+      // a public deployment must expose an ABSOLUTE share-card image
+      const ogImage = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1] || '';
+      if (absolute) {
+        const ok = /^https:\/\//.test(ogImage);
+        if (!ok) fail++;
+        console.log(`   ${ok ? '✓' : '✗'} og:image is an absolute https URL (${ogImage})`);
+      }
+      const ogFetch = await fetch(
+        /^https?:\/\//.test(ogImage) ? ogImage : new URL(ogImage, `${base}/`).href
+      );
+      const ogOk = ogFetch.ok && /image\//.test(ogFetch.headers.get('content-type') || '');
+      if (!ogOk) fail++;
+      console.log(`   ${ogOk ? '✓' : '✗'} share card image loads (HTTP ${ogFetch.status})`);
     }
   } catch (err) {
     fail++;
