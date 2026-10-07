@@ -7,7 +7,7 @@
  *
  * Usage: node scripts/build.mjs
  */
-import { cp, mkdir, rm, writeFile, readdir, stat } from 'node:fs/promises';
+import { cp, mkdir, rm, writeFile, readdir, stat, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DATA_AS_OF } from '../site.config.js';
@@ -52,6 +52,33 @@ async function walk(dir) {
 const files = await walk(DIST);
 let bytes = 0;
 for (const f of files) bytes += (await stat(f)).size;
+
+/* Guard: every copied file must equal its source byte-for-byte. A stale dist/
+   copy previously made the deployed JavaScript lag the workspace, which is
+   exactly the kind of bug that is invisible until it is live. */
+const mismatches = [];
+for (const dir of DIRS) {
+  const srcFiles = await walk(path.join(ROOT, dir));
+  for (const abs of srcFiles) {
+    const rel = path.relative(ROOT, abs);
+    const copy = path.join(DIST, rel);
+    try {
+      const [a, b] = await Promise.all([readFile(abs), readFile(copy)]);
+      if (!a.equals(b)) mismatches.push(rel);
+    } catch {
+      mismatches.push(`${rel} (missing in dist)`);
+    }
+  }
+}
+for (const f of FILES) {
+  const [a, b] = await Promise.all([readFile(path.join(ROOT, f)), readFile(path.join(DIST, f))]);
+  if (!a.equals(b)) mismatches.push(f);
+}
+if (mismatches.length) {
+  console.error(`✗ ${mismatches.length} file(s) differ between source and dist:`);
+  for (const m of mismatches.slice(0, 10)) console.error(`   ${m}`);
+  process.exit(1);
+}
 
 const gaps = YEARS.filter((d) => !d.hasPhoto).map((d) => d.year);
 const manifest = {

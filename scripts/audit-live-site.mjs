@@ -67,12 +67,21 @@ check(/ENTER THE JOURNEY/.test(html), 'the hero offers ENTER THE JOURNEY');
 check(/property="og:image:width" content="1200"/.test(html), 'the share card declares 1200x630');
 
 const timelineJs = await (await get('/src/ui/timeline.js')).text();
-check(/srcset=/.test(timelineJs) && /-900\.jpg/.test(timelineJs), 'the timeline ships responsive srcset markup');
+// the 900px filename itself comes from the data, so the template only needs to
+// build a srcset from photoSmall
+check(
+  timelineJs.includes('srcset=') && timelineJs.includes('photoSmall'),
+  'the timeline builds a srcset from the per-photo variants'
+);
 check(/year__frame--gap/.test(timelineJs), 'the timeline renders archive-gap plates');
 
 const credits = await (await get('/src/data/photo-credits.js')).text();
-check(/photoSmall/.test(credits), 'per-photo variants are declared in the data');
-check(/photoDate/.test(credits) && /license/.test(credits), 'every year carries dated provenance and a licence');
+const smallCount = (credits.match(/"photoSmall": "[^"]+"/g) || []).length;
+check(smallCount >= 8, `${smallCount} years advertise a 900px variant`);
+check(
+  credits.includes('photoDate') && credits.includes('photoLicense') && credits.includes('verified'),
+  'every year carries dated provenance, a licence and a verification flag'
+);
 
 /* 4. the stylesheet really contains the responsive rules */
 const css = await (await get('/styles.css')).text();
