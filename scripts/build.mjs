@@ -17,7 +17,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 
-const FILES = ['index.html', '404.html', 'styles.css', 'site.config.js', 'robots.txt', 'vercel.json', '.nojekyll'];
+const FILES = [
+  'index.html',
+  '404.html',
+  'self-test.html', // the browser self-check ships with the site so a deployment can be verified in place
+  'styles.css',
+  'site.config.js',
+  'robots.txt',
+  'vercel.json',
+  '.nojekyll',
+];
 const DIRS = ['src', 'assets'];
 
 await rm(DIST, { recursive: true, force: true });

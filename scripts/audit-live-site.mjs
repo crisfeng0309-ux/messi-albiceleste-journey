@@ -1,21 +1,29 @@
 /**
- * scripts/audit-live.mjs — deep audit of the published site.
+ * scripts/audit-live-site.mjs — deep audit of the published site.
  *
- * Checks the things the smoke test does not: responsive image variants, the
- * browser self-test page, 404 handling, and that the live HTML actually carries
- * the responsive markup and absolute share-card metadata.
+ * Checks what the smoke test does not: responsive image variants, the browser
+ * self-test page, 404 handling, and that the live assets carry the responsive
+ * markup and absolute share-card metadata.
  *
- *   node scripts/audit-live.mjs [url]
+ *   node scripts/audit-live-site.mjs [url]
  */
+
 const base = (process.argv[2] || 'https://crisfeng0309-ux.github.io/messi-albiceleste-journey').replace(/\/$/, '');
+
+/**
+ * Cache-busting GET. GitHub Pages serves JS/CSS with max-age=600, so without
+ * this a freshly deployed revision can be audited against the previous one.
+ */
+const get = (path) =>
+  fetch(`${base}${path}${path.includes('?') ? '&' : '?'}audit=${Date.now()}-${Math.random().toString(36).slice(2)}`);
 
 const results = [];
 const check = (ok, msg) => {
   results.push({ ok: Boolean(ok), msg });
-  console.log(`${ok ? '✓' : '✗'} ${msg}`);
+  console.log(`${ok ? '[ok]' : '[!!]'} ${msg}`);
 };
 
-/* 1. responsive variants and secondary pages exist */
+/* 1. responsive variants, secondary pages and build output exist */
 const extra = [
   '/assets/photos/2007-900.jpg',
   '/assets/photos/2022-900.jpg',
@@ -27,7 +35,7 @@ const extra = [
 ];
 for (const path of extra) {
   try {
-    const res = await fetch(base + path);
+    const res = await get(path);
     const type = res.headers.get('content-type') || '';
     const isImage = /\.jpg$/.test(path);
     check(res.ok && (!isImage || /image\//.test(type)), `${res.status} ${type.split(';')[0]} ${path}`);
@@ -36,44 +44,48 @@ for (const path of extra) {
   }
 }
 
-/* 2. a route that a reader might type should fall back to the engine's 404 page */
+/* 2. a route a reader might type must be handled */
 try {
-  const res = await fetch(`${base}/2022`);
+  const res = await get('/2022');
   const body = await res.text();
   check(res.status === 404 || /MESSI/.test(body), `unknown route is handled (HTTP ${res.status})`);
 } catch (err) {
   check(false, `route fallback — ${err.message}`);
 }
 
-/* 3. the live HTML carries the sharing markup.
-   NOTE: the year frames are rendered client-side from src/data/years.js, so the
-   responsive srcset lives in the shipped JavaScript, not in index.html. */
-const html = await (await fetch(`${base}/`)).text();
+/* 3. the live document carries the sharing metadata.
+   The year frames are rendered client-side, so the responsive srcset lives in
+   the shipped JavaScript rather than in index.html. */
+const html = await (await get('/')).text();
 const og = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1] || '';
 check(/^https:\/\//.test(og), `og:image is absolute (${og})`);
-check(new RegExp(`^https://[^/]+/`).test(og), 'og:image is on the public host');
+check(/^https:\/\/[^/]+\//.test(og), 'og:image is on the public host');
 const canonical = /<link rel="canonical" href="([^"]+)"/.exec(html)?.[1] || '';
 check(canonical === `${base}/`, `canonical points at the live site (${canonical})`);
 check(/<link rel="preload" as="image" href="assets\/photos\/\d{4}\.jpg"/.test(html), 'the hero photograph is preloaded');
+check(/ENTER THE JOURNEY/.test(html), 'the hero offers ENTER THE JOURNEY');
+check(/property="og:image:width" content="1200"/.test(html), 'the share card declares 1200x630');
 
-const timelineJs = await (await fetch(`${base}/src/ui/timeline.js`)).text();
+const timelineJs = await (await get('/src/ui/timeline.js')).text();
 check(/srcset=/.test(timelineJs) && /-900\.jpg/.test(timelineJs), 'the timeline ships responsive srcset markup');
 check(/year__frame--gap/.test(timelineJs), 'the timeline renders archive-gap plates');
-const yearsData = await (await fetch(`${base}/src/data/years.js`)).text();
-check(/photoSmall/.test(await (await fetch(`${base}/src/data/photo-credits.js`)).text()), 'per-photo variants are declared in the data');
 
-/* 4. the stylesheet really contains the responsive breakpoints */
-const css = await (await fetch(`${base}/styles.css`)).text();
+const credits = await (await get('/src/data/photo-credits.js')).text();
+check(/photoSmall/.test(credits), 'per-photo variants are declared in the data');
+check(/photoDate/.test(credits) && /license/.test(credits), 'every year carries dated provenance and a licence');
+
+/* 4. the stylesheet really contains the responsive rules */
+const css = await (await get('/styles.css')).text();
 for (const bp of ['max-width: 1180px', 'max-width: 900px', 'max-width: 560px', 'prefers-reduced-motion']) {
   check(css.includes(bp), `stylesheet covers ${bp}`);
 }
 check(/year__frame--gap/.test(css), 'archive-gap plates are styled');
 check(/dossier__gap/.test(css), 'the dossier explains a gap year');
 
-/* 5. the data actually served matches the claimed career totals */
-const years = await (await fetch(`${base}/src/data/years.js`)).text();
-check(/2005, 18, '初见'/.test(years), 'the 2005 chapter (age 18, 初见) is present');
-check(/2026, 39, '最后的章节'/.test(years), 'the 2026 chapter (age 39, 最后的章节) is present');
+/* 5. the data actually served matches the claimed chapters and totals */
+const years = await (await get('/src/data/years.js')).text();
+check(years.includes('2005, 18, ') && years.includes('初见'), 'the 2005 chapter (age 18) is present');
+check(years.includes('2026, 39, ') && years.includes('最后的章节'), 'the 2026 chapter (age 39) is present');
 check(/WORLD CUP CHAMPION/.test(years), '2022 is the world-champion chapter');
 check(/208/.test(years) && /126/.test(years), 'the verified career totals 208 / 126 are published');
 
