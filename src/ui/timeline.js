@@ -36,8 +36,15 @@ export function renderTimeline(root, years, { onOpen }) {
     /* Years with no verifiable free photograph get a designed plate that names
        the gap. The museum shows the hole rather than a wrongly dated image. */
     const focus = d.photoFocus || '50% 30%';
+    /* A 900px-wide variant ships alongside each full photograph so phones do not
+       download the 1900px original; browsers pick via srcset. It is only listed
+       when the file really exists (photoSmall is empty otherwise). */
+    const srcset = d.photoSmall
+      ? ` srcset="${esc(d.photoSmall)} 900w, ${esc(d.photo)} 1900w" sizes="(max-width: 900px) 92vw, 46vw"`
+      : '';
     const visual = d.hasPhoto
-      ? `<img src="${esc(d.photo)}" alt="${esc(d.photoAlt || `Lionel Messi, ${d.year}, Argentina`)}"
+      ? `<img src="${esc(d.photo)}"${srcset}
+                alt="${esc(d.photoAlt || `Lionel Messi, ${d.year}, Argentina`)}"
                 style="object-position:${esc(focus)}"
                 loading="${eagerYears.has(d.year) ? 'eager' : 'lazy'}" decoding="async"
                 fetchpriority="${eagerYears.has(d.year) ? 'high' : 'auto'}">`

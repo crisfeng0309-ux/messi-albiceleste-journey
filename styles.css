@@ -1310,6 +1310,16 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
   .dossier__matches .m-date { width: 4.6rem; }
   .dossier__nav { flex-direction: column; gap: 0; }
   .dossier__nav button:last-child { text-align: left; }
+  /* WCAG 2.5.5: the dossier control is a real touch target on phones */
+  .year__open { padding: 0.75rem 0; min-height: 44px; }
+  .rail__year { padding: 0.5rem 0.15rem; }
+  .dossier__nav button { min-height: 48px; }
+}
+
+/* Very wide screens: keep the axis readable rather than stretching it */
+@media (min-width: 1800px) {
+  :root { --rail-x: 96px; }
+  .year__grid { max-width: 108rem; }
 }
 
 /* Touch: avoid hover-only affordances */

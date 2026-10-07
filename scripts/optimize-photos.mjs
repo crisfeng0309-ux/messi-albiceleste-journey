@@ -14,6 +14,7 @@ const ROOT = path.resolve(__dirname, '..');
 const DIR = path.join(ROOT, 'assets', 'photos');
 const MAX_W = 1900;
 const MAX_H = 1500;
+const SMALL_W = 900;
 const QUALITY = 84;
 
 let python;
@@ -54,9 +55,21 @@ for name in sorted(os.listdir(d)):
         if out != p and os.path.exists(p):
             os.remove(p)
         print(f"  {name}: {im.width}x{im.height} {os.path.getsize(out)//1024} KB")
+
+        # a narrow variant so phones do not download the full-width original
+        w = int(sys.argv[5])
+        if im.width > w:
+            small = os.path.splitext(p)[0] + f'-{w}.jpg'
+            sm = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
+            sm.save(small, 'JPEG', quality=q, optimize=True, progressive=True)
+            print(f"      small {os.path.basename(small)}: {sm.width}x{sm.height} {os.path.getsize(small)//1024} KB")
     except Exception as e:
         print(f"  ! {name}: {e}")
 `.trim();
 
-const r = spawnSync(python, ['-c', script, DIR, String(MAX_W), String(QUALITY), String(MAX_H)], { stdio: 'inherit' });
+const r = spawnSync(
+  python,
+  ['-c', script, DIR, String(MAX_W), String(QUALITY), String(MAX_H), String(SMALL_W)],
+  { stdio: 'inherit' }
+);
 process.exit(r.status ?? 0);

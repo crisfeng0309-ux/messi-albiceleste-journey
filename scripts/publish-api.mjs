@@ -49,20 +49,31 @@ const HEADERS = {
   'X-GitHub-Api-Version': '2022-11-28',
 };
 
-async function api(method, endpoint, body) {
-  const res = await fetch(`${API}${endpoint}`, {
-    method,
-    headers: { ...HEADERS, ...(body ? { 'Content-Type': 'application/json' } : {}) },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  let json = null;
-  const text = await res.text();
-  try {
-    json = text ? JSON.parse(text) : null;
-  } catch {
-    json = { raw: text.slice(0, 300) };
+async function api(method, endpoint, body, { retries = 4 } = {}) {
+  let last = null;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const res = await fetch(`${API}${endpoint}`, {
+      method,
+      headers: { ...HEADERS, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const text = await res.text();
+    let json = null;
+    try {
+      json = text ? JSON.parse(text) : null;
+    } catch {
+      json = { raw: text.slice(0, 300) };
+    }
+    last = { status: res.status, json };
+    // GitHub returns 5xx/403 sporadically; back off and retry those.
+    if (res.status < 500 && res.status !== 403) return last;
+    if (attempt < retries) {
+      const wait = 2000 * (attempt + 1);
+      console.log(`   … ${method} ${endpoint} -> ${res.status}, retrying in ${wait / 1000}s`);
+      await new Promise((r) => setTimeout(r, wait));
+    }
   }
-  return { status: res.status, json };
+  return last;
 }
 
 /* ---- what gets published ------------------------------------------------ */

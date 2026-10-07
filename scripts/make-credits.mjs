@@ -8,6 +8,7 @@
  * Usage: node scripts/make-credits.mjs
  */
 import { readFile, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -23,8 +24,12 @@ const lines = [];
 for (const year of Array.from(byYear.keys()).sort((a, b) => a - b)) {
   const r = byYear.get(year);
   const verified = Boolean(r.found && r.photoDate && r.photoEvent && r.confidence && r.confidence !== 'low' && (r.thumbUrl || r.fileUrl));
+  // a 900px variant only exists when scripts/optimize-photos.mjs produced one
+  const small = `assets/photos/${year}-900.jpg`;
+  const hasSmall = verified && existsSync(path.join(ROOT, small));
   const fields = {
     photo: `assets/photos/${year}.jpg`,
+    photoSmall: hasSmall ? small : '',
     photoDate: verified ? r.photoDate : '',
     photoEvent: r.photoEvent || '',
     photoMatch: r.photoMatch || '',

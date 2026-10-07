@@ -126,9 +126,35 @@ node scripts/verify.mjs                     # 一次跑完以上全部
 
 `self-test.html` 在真实浏览器里再跑一遍同样的关键路径（照片解码、点击开档案、关闭回到原位、分享图可访问）。
 
-## 公开部署（Vercel）
+## 公开部署
 
-站点是纯静态、零构建：Vercel 直接托管根目录，无需构建步骤。
+站点是纯静态、零构建：部署产物就是仓库根目录下的静态文件，`vercel.json` 已处理 SPA 回退与缓存头。
+
+### 已上线（GitHub Pages）
+
+```
+https://crisfeng0309-ux.github.io/messi-albiceleste-journey/
+```
+
+由 `.github/workflows/pages.yml` 自动构建与发布：
+
+1. push 到 `main`
+2. Actions 运行 `node scripts/build.mjs` 生成 `dist/`
+3. 把 `dist/` 发布到 GitHub Pages
+
+在受限环境里 `git push` 可能因 TLS（schannel）或凭据助手不可用而失败，因此提供了一个
+纯 HTTPS（Node `fetch`）的发布脚本，它用 Git Data API 把整棵文件树写成一个 commit：
+
+```bash
+# 发布（需要 .tools/gh-token.txt，由 publish-github.cmd 用 `gh auth token` 写入）
+node scripts/publish-api.mjs --login <github-user> [repo]
+
+# 上线后验证
+node scripts/verify-live.mjs https://<user>.github.io/<repo>/
+node scripts/wait-pages.mjs <user>/<repo>        # 等 Actions 构建结束
+```
+
+### 备选：Vercel
 
 ```bash
 # 第一次：安装 workspace 内的 CLI

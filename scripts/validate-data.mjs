@@ -11,6 +11,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { YEARS, CAREER_TOTALS, DATA_NOTES, YEARS_APPEARANCE_SUM } from '../src/data/years.js';
+import { SITE } from '../site.config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -105,7 +106,27 @@ if (capGap > 0) ok.push(`documented caps difference: ${capGap} (sum vs official 
 const keys = new Set(YEARS.map((d) => d.year));
 expect(keys.size === YEARS.length, 'no duplicate years');
 
-/* ---- 5. photo provenance completeness ----------------------------------- */
+/* ---- 5. share card: the meta tag, the file, and the config must agree ----- */
+const html = await readFile(path.join(ROOT, 'index.html'), 'utf8');
+const ogTag = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1] || '';
+expect(/^https:\/\//.test(ogTag), `og:image is an absolute https URL (${ogTag || 'missing'})`);
+expect(ogTag === SITE.ogImage, 'index.html og:image matches site.config.js');
+const twTag = /<meta name="twitter:image" content="([^"]+)"/.exec(html)?.[1] || '';
+expect(twTag === ogTag, 'twitter:image matches og:image');
+const canonical = /<link rel="canonical" href="([^"]+)"/.exec(html)?.[1] || '';
+expect(canonical === SITE.siteUrl, `canonical points at the public site (${canonical})`);
+expect(ogTag.includes(SITE.siteUrl.replace(/^https?:\/\//, '').split('/')[0]), 'og:image is hosted on the public domain');
+try {
+  const ogFile = path.join(ROOT, 'assets', 'og-cover.jpg');
+  const size = (await stat(ogFile)).size;
+  expect(size > 30000, `share card file exists (${Math.round(size / 1024)} KB)`);
+} catch {
+  errors.push('missing assets/og-cover.jpg');
+}
+expect(html.includes('ENTER THE JOURNEY'), 'the hero offers ENTER THE JOURNEY');
+expect(/<title>[^<]*MESSI[^<]*<\/title>/.test(html), 'the page title names the museum');
+
+/* ---- 6. photo provenance completeness ----------------------------------- */
 const withCredit = YEARS.filter((d) => d.photoSourceUrl).length;
 if (withCredit < YEARS.length) {
   warnings.push(`${YEARS.length - withCredit} year(s) still lack a verified photo credit/source URL`);
