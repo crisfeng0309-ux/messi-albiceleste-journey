@@ -11,6 +11,8 @@
 
 ## 这是什么
 
+**已上线：https://crisfeng0309-ux.github.io/messi-albiceleste-journey/**
+
 - **首页**：一张照片（2014 年世界杯决赛，梅西在马拉卡纳射门）、一个名字、一句文案，一个 `ENTER THE JOURNEY` 按钮。
 - **时间轴**：2005 → 2026，一年一个节点，照片像历史记忆一样附着在一根连续的时间轴上；滚动时节点逐渐亮起，左侧轨道显示你走到了哪一年。没有可核实照片的年份显示为一块「档案缺口」铭牌。
 - **年度档案**：点击任意一年的照片（或 `Open the YYYY dossier`），打开那一年的档案 —— 年龄、当年国家队数据与生涯累计、主要赛事、重要比赛、重要事件、荣誉，以及一段「这一年的梅西」。关闭后回到原来的滚动位置；也可以用 ← → 在年份之间移动。
@@ -24,9 +26,13 @@ node scripts/serve.mjs 4173
 #   → http://127.0.0.1:4173/
 #   → http://127.0.0.1:4173/self-test.html   （浏览器内自检）
 
-# 公开部署（需要一次 Vercel 登录）
-node scripts/setup-vercel.mjs login     # 或：publish.cmd login
-node scripts/setup-vercel.mjs deploy    # 或：publish.cmd deploy
+# 发布（GitHub Pages；详见下方「公开部署」）
+node scripts/publish-api.mjs --login <github-user>
+
+# 上线后验证
+node scripts/audit-live-site.mjs      # 28 项深度审计
+node scripts/check-render.mjs         # 37 项用户可见内容校验
+node scripts/compare-live-data.mjs    # 线上与本地数据逐字节比对
 ```
 
 ## 目录结构
