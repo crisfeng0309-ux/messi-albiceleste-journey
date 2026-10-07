@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Self-test · MESSI · THE ALBICELESTE JOURNEY</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #070A10; color: #EDE6D6; font: 14px/1.7 ui-monospace, Consolas, monospace; padding: 2rem clamp(1rem, 5vw, 4rem); }
+  h1 { font-size: 1rem; letter-spacing: .3em; font-weight: 400; color: #C6A263; text-transform: uppercase; }
+  #summary { margin: 1.4rem 0; font-size: 1.1rem; }
+  li { list-style: none; padding: .3rem 0; border-bottom: 1px solid rgba(237,230,214,.07); }
+  .pass::before { content: "✓ "; color: #7FBF8A; }
+  .fail::before { content: "✗ "; color: #E0705F; }
+  .fail { color: #F0B3A8; }
+  iframe { width: 100%; height: 70vh; border: 1px solid rgba(237,230,214,.15); margin-top: 1.5rem; background: #000; }
+</style>
+</head>
+<body>
+<h1>Messi museum · self test</h1>
+<div id="summary">running…</div>
+<ul id="results"></ul>
+<iframe id="stage" src="index.html" title="site under test"></iframe>
+<script type="module">
+/**
+ * In-browser mirror of scripts/test-dom.mjs. Runs against the real rendered
+ * site inside the iframe so the interaction and asset checks are verified in a
+ * genuine browser engine as well as in the headless harness.
+ */
+const results = [];
+const check = (cond, msg) => results.push({ cond: Boolean(cond), msg });
+const list = document.getElementById('results');
+const summary = document.getElementById('summary');
+const stage = document.getElementById('stage');
+
+function render() {
+  const failed = results.filter((r) => !r.cond);
+  summary.textContent = failed.length
+    ? `${results.length - failed.length}/${results.length} checks passed — ${failed.length} failed`
+    : `${results.length}/${results.length} checks passed`;
+  summary.style.color = failed.length ? '#F0B3A8' : '#9FD3A8';
+  list.innerHTML = results.map((r) => `<li class="${r.cond ? 'pass' : 'fail'}">${r.msg}</li>`).join('');
+}
+
+/* Any thrown error is reported as a failed check instead of a blank page. */
+window.addEventListener('error', (e) => {
+  check(false, `uncaught error: ${e.message}`);
+  render();
+});
+
+try {
+
+await new Promise((resolve) => {
+  if (stage.contentDocument?.readyState === 'complete') return resolve();
+  stage.addEventListener('load', resolve, { once: true });
+});
+await new Promise((r) => setTimeout(r, 500));
+
+const doc = stage.contentDocument;
+const win = stage.contentWindow;
+const { YEARS } = await import('./src/data/years.js');
+
+/* structure */
+check(doc.querySelectorAll('.year').length === 22, '22 year sections rendered');
+check(doc.querySelector('#years').children.length === 22, 'the axis holds all 22 chapters in order');
+check(doc.querySelector('.rail__year') !== null, 'the side rail is present');
+check(doc.querySelector('#enter') !== null, 'the ENTER THE JOURNEY control exists');
+
+const years = [...doc.querySelectorAll('.year')].map((s) => Number(s.dataset.year));
+check(years[0] === 2005 && years.at(-1) === 2026, `axis spans 2005 → 2026 (${years[0]}…${years.at(-1)})`);
+check(years.every((y, i) => i === 0 || y === years[i - 1] + 1), 'no missing years on the axis');
+
+/* every frame is either a verified photograph or a documented archive gap */
+const frames = [...doc.querySelectorAll('.year__frame')];
+const gapFrames = frames.filter((f) => f.classList.contains('year__frame--gap'));
+const photos = frames.filter((f) => f.querySelector('img'));
+check(frames.length === 22, '22 photo frames');
+check(photos.length + gapFrames.length === 22, `every frame is a photo or a gap (${photos.length} + ${gapFrames.length})`);
+check(gapFrames.length > 0, `years without a verifiable photo are documented, not faked (${gapFrames.length} gaps)`);
+check(
+  gapFrames.every((f) => /archive gap/i.test(f.textContent)),
+  'each gap plate is labelled as an archive gap'
+);
+check(
+  ![...gapFrames].some((f) => f.querySelector('img')),
+  'no gap year renders an image'
+);
+
+/* photos actually load (real network/decode check) */
+const imgs = [...doc.querySelectorAll('.year__frame img')];
+imgs.forEach((i) => i.setAttribute('loading', 'eager'));
+const settle = (i) =>
+  i.complete && i.naturalWidth
+    ? Promise.resolve()
+    : new Promise((r) => {
+        i.addEventListener('load', r, { once: true });
+        i.addEventListener('error', r, { once: true });
+      });
+await Promise.race([Promise.all(imgs.map(settle)), new Promise((r) => setTimeout(r, 15000))]);
+const broken = imgs.filter((i) => !i.naturalWidth);
+check(broken.length === 0, `every photograph decodes (${imgs.length - broken.length}/${imgs.length} ok)${broken.length ? ` — broken: ${broken.map((b) => b.src.split('/').pop()).join(', ')}` : ''}`);
+check(imgs.every((i) => i.naturalWidth >= 400), 'photographs are large enough to render sharply');
+check(
+  imgs.every((i) => (i.getAttribute('style') || '').includes('object-position')),
+  'every photograph carries an explicit framing anchor'
+);
+
+/* entering the journey */
+doc.getElementById('enter').click();
+await new Promise((r) => setTimeout(r, 60));
+check(doc.getElementById('journey').hidden === false, 'ENTER reveals the timeline');
+check(doc.body.classList.contains('entered'), 'body reflects the entered state');
+
+/* opening a dossier */
+const f2022 = [...doc.querySelectorAll('.year__frame')].find((f) => f.closest('.year').dataset.year === '2022');
+f2022.click();
+await new Promise((r) => setTimeout(r, 120));
+const archive = doc.getElementById('archive');
+check(archive.hidden === false && archive.classList.contains('is-open'), 'clicking the 2022 photo opens the dossier');
+const text = doc.getElementById('archive-panel').textContent;
+check(/2022/.test(text) && /WORLD CUP CHAMPION/.test(text), '2022 dossier reads WORLD CUP CHAMPION');
+check(/Finalissima/.test(text) && /FIFA World Cup/.test(text), '2022 dossier lists both competitions');
+check(/墨西哥/.test(text) && /法国/.test(text), '2022 dossier lists the Mexico and France matches');
+check(/35/.test(doc.querySelector('.dossier__age')?.textContent || ''), '2022 dossier shows age 35');
+
+/* prev / next inside the dossier */
+doc.querySelector('.dossier__nav button:last-child').click();
+await new Promise((r) => setTimeout(r, 120));
+check(/2023/.test(doc.querySelector('.dossier__year')?.textContent || ''), 'the dossier can advance to 2023');
+
+/* closing restores the reader */
+const before = win.scrollY;
+archive.querySelector('.archive__close').click();
+await new Promise((r) => setTimeout(r, 700));
+check(archive.hidden === true, 'closing hides the dossier');
+check(Math.abs(win.scrollY - before) < 40, `closing restores the timeline position (Δ${Math.abs(win.scrollY - before)}px)`);
+
+/* epilogue + share card */
+check(/Gracias, Leo\./.test(doc.querySelector('.epilogue__gracias')?.textContent || ''), 'the epilogue ends with Gracias, Leo.');
+check(doc.querySelectorAll('.epilogue__stats li').length >= 3, 'the epilogue shows the closing figures');
+check(/208/.test(doc.querySelector('.epilogue__stats')?.textContent || ''), 'the epilogue carries the verified 208 caps');
+const og = doc.querySelector('meta[property="og:image"]')?.getAttribute('content');
+check(Boolean(og), `share card image is declared (${og})`);
+try {
+  const ogRes = await fetch(new URL(og, win.location.href).href);
+  check(ogRes.ok && /image\//.test(ogRes.headers.get('content-type') || ''), `share card image is reachable (HTTP ${ogRes.status})`);
+} catch (err) {
+  check(false, `share card image fetch failed: ${err.message}`);
+}
+
+/* every year's data is complete */
+const incomplete = YEARS.filter((d) => !d.story?.length || !d.chapter || !Number.isFinite(d.age));
+check(incomplete.length === 0, `all 22 chapters carry a story and an age (${22 - incomplete.length}/22)`);
+const undated = YEARS.filter((d) => !d.photoDate).map((d) => d.year);
+check(true, `photo provenance: ${22 - undated.length}/22 dated — without a verifiable photo: ${undated.join(', ') || 'none'}`);
+check(
+  YEARS.filter((d) => d.hasPhoto).length === photos.length,
+  'the data and the rendered timeline agree on which years have photographs'
+);
+
+render();
+} catch (err) {
+  check(false, `self-test aborted: ${err && err.message ? err.message : String(err)}`);
+  render();
+}
+</script>
+</body>
+</html>

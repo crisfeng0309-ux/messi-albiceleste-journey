@@ -1,0 +1,19 @@
+{
+  "name": "messi-albiceleste-journey",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MESSI · THE ALBICELESTE JOURNEY — 2005—2026. A photo-driven digital museum of Lionel Messi's Argentina national team career.",
+  "scripts": {
+    "serve": "node scripts/serve.mjs 4173",
+    "validate": "node scripts/validate-data.mjs",
+    "test:dom": "node scripts/test-dom.mjs",
+    "test:http": "node scripts/smoke-test.mjs http://127.0.0.1:4173",
+    "test": "node scripts/validate-data.mjs && node scripts/test-dom.mjs",
+    "photos:credits": "node scripts/make-credits.mjs",
+    "photos:fetch": "node scripts/fetch-photos.mjs",
+    "photos:optimize": "node scripts/optimize-photos.mjs",
+    "og": "node scripts/make-og.mjs",
+    "deploy": "node scripts/setup-vercel.mjs deploy"
+  }
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MESSI · THE ALBICELESTE JOURNEY — 2005—2026</title>
+<meta name="description" content="2005 — 2026 — A visual journey through Lionel Messi's Argentina national team career. 每一年一张影像，一段故事：梅西阿根廷国家队生涯的数字博物馆。" />
+<meta name="theme-color" content="#070A10" />
+<link rel="canonical" href="https://messi-albiceleste-journey.vercel.app/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="MESSI · THE ALBICELESTE JOURNEY" />
+<meta property="og:title" content="MESSI · THE ALBICELESTE JOURNEY" />
+<meta property="og:description" content="2005 — 2026 · A visual journey through Lionel Messi's Argentina national team career." />
+<meta property="og:image" content="assets/og-cover.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Lionel Messi, Argentina national team, 2005—2026" />
+<meta property="og:locale" content="zh_CN" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="MESSI · THE ALBICELESTE JOURNEY" />
+<meta name="twitter:description" content="2005 — 2026 · A visual journey through Lionel Messi's Argentina national team career." />
+<meta name="twitter:image" content="assets/og-cover.jpg" />
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preload" as="image" href="assets/photos/2022.jpg" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="is-loading">
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="hero">
+  <div class="hero__media" aria-hidden="true">
+    <img id="hero-photo" alt="" />
+    <div class="hero__veil"></div>
+    <div class="hero__sun" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__inner">
+    <p class="hero__eyebrow">Argentina · 2005 — 2026</p>
+    <h1 class="hero__title">
+      <span class="hero__title-line">LIONEL</span>
+      <span class="hero__title-line hero__title-line--wide">MESSI</span>
+    </h1>
+    <p class="hero__sub">ARGENTINA · THE ALBICELESTE JOURNEY</p>
+    <p class="hero__line">From the first call-up &nbsp;—&nbsp; to the final chapter.</p>
+    <p class="hero__line hero__line--zh">从第一次征召，到最后一章。</p>
+    <button class="enter" id="enter" type="button">
+      <span class="enter__label">ENTER THE JOURNEY</span>
+      <span class="enter__rule" aria-hidden="true"></span>
+    </button>
+    <p class="hero__hint">21 年 · 一年一张影像 · 点击照片进入那一年的档案</p>
+  </div>
+
+  <div class="hero__scroll" aria-hidden="true"><span></span></div>
+</header>
+
+<!-- ============ TIMELINE ============ -->
+<main id="journey" class="journey" aria-label="2005 至 2026 梅西国家队生涯时间轴" hidden>
+  <div class="rail" aria-hidden="true">
+    <div class="rail__track"><div class="rail__fill" id="rail-fill"></div></div>
+    <div class="rail__years" id="rail-years"></div>
+  </div>
+
+  <div class="years" id="years"></div>
+
+  <!-- ============ EPILOGUE ============ -->
+  <section class="epilogue" id="epilogue">
+    <div class="epilogue__inner">
+      <p class="epilogue__kicker">2005 — 2026</p>
+      <h2 class="epilogue__name">MESSI</h2>
+      <p class="epilogue__span">THE ALBICELESTE JOURNEY</p>
+      <ul class="epilogue__stats" id="epilogue-stats"></ul>
+      <p class="epilogue__journey">退役 · RETIRED 31 AUG 2026</p>
+      <p class="epilogue__gracias">Gracias, Leo.</p>
+      <p class="epilogue__note" id="epilogue-note"></p>
+    </div>
+    <div class="epilogue__fade" aria-hidden="true"></div>
+  </section>
+
+  <footer class="colophon">
+    <div class="colophon__grid">
+      <div>
+        <h3>About this museum</h3>
+        <p>这是一条从 2005 延伸到 2026 的个人纪念时间轴。每一年：一张可溯源的真实影像，一个可以进入的历史章节。照片优先，故事其次，数据最后。</p>
+      </div>
+      <div>
+        <h3>Photo sources</h3>
+        <p id="colophon-photo-summary">照片主要来自 Wikimedia Commons 等公开可访问来源，均保留作者与许可证信息。点击任一年份档案底部可查看该照片的来源、日期与许可。</p>
+      </div>
+      <div>
+        <h3>Data sources</h3>
+        <p id="colophon-data-summary">出场、进球、助攻与赛事数据参考公开比赛资料整理；无法确认的数据在页面中明确标注。数据最后核对日期：<span id="colophon-date"></span>。</p>
+      </div>
+    </div>
+    <p class="colophon__legal">非官方、非商业性质的个人致敬项目。Lionel Messi 及相关名称、赛事与影像版权归各自权利人所有。本站不绕过任何登录、付费墙或技术保护。</p>
+  </footer>
+</main>
+
+<!-- ============ ARCHIVE (year dossier) ============ -->
+<div class="archive" id="archive" role="dialog" aria-modal="true" aria-labelledby="archive-year" hidden>
+  <div class="archive__scrim" data-close></div>
+  <div class="archive__panel" id="archive-panel" tabindex="-1"></div>
+</div>
+
+<noscript>
+  <div style="padding:6rem 2rem;color:#EDE6D6;background:#070A10;font-family:serif">
+    <h1>MESSI · THE ALBICELESTE JOURNEY</h1>
+    <p>2005 — 2026 · 这条时间轴需要启用 JavaScript 才能浏览。</p>
+  </div>
+</noscript>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
