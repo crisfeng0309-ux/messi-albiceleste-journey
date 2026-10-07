@@ -66,6 +66,25 @@ async function startServer(script, port) {
   return null;
 }
 
+/** same, but serving a specific directory (used for the built dist/) */
+async function startServerDist(script, port, dir) {
+  const child = spawn(node, [script, String(port), dir], { cwd: ROOT, stdio: 'ignore' });
+  for (let i = 0; i < 60; i++) {
+    try {
+      const res = await fetch(`http://127.0.0.1:${port}/`);
+      if (res.ok) {
+        await res.arrayBuffer();
+        return child;
+      }
+    } catch {
+      /* not listening yet */
+    }
+    await new Promise((r) => setTimeout(r, 200));
+  }
+  child.kill();
+  return null;
+}
+
 const PLAIN_PORT = 4188;
 const VERCEL_PORT = 4189;
 
@@ -86,6 +105,10 @@ if (vercelish) {
   results.push({ label: 'http smoke (vercel routing)', ok: false });
 }
 vercelish?.kill();
+
+/* the check that catches a broken import path (invisible hero / black screen).
+   It is self-contained: it builds dist/ and serves it on its own port. */
+run('module graph (dist)', path.join(ROOT, 'scripts', 'check-modules.mjs'));
 
 console.log('\n================ SUMMARY ================');
 for (const r of results) console.log(`${r.ok ? '✓' : '✗'} ${r.label}`);

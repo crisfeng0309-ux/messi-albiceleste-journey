@@ -1,0 +1,6 @@
+﻿{
+    "ProxyEnable":  1,
+    "savedAt":  "2026-10-08T00:00:42",
+    "AutoConfigURL":  null,
+    "ProxyServer":  "127.0.0.1:18081"
+}
