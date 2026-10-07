@@ -17,7 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 
-const FILES = ['index.html', '404.html', 'styles.css', 'site.config.js', 'robots.txt', 'vercel.json'];
+const FILES = ['index.html', '404.html', 'styles.css', 'site.config.js', 'robots.txt', 'vercel.json', '.nojekyll'];
 const DIRS = ['src', 'assets'];
 
 await rm(DIST, { recursive: true, force: true });
