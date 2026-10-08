@@ -238,7 +238,7 @@
     "year": 2016,
     "found": true,
     "confidence": "high",
-    "source": "使用者提供（图片带 Getty Images 水印，Credit: Mark Ralston，编号 542026884）",
+    "source": "使用者提供（图片带社媒轮播箭头水印；使用者自述已核对日期）",
     "title": "Copa América Centenario semi-final, Houston 2016",
     "pageUrl": "",
     "thumbUrl": "",
@@ -248,21 +248,34 @@
     "photoEvent": "百年美洲杯 · 半决赛",
     "photoMatch": "美国 0—4 阿根廷",
     "photoVenue": "NRG 体育场 · 休斯敦（NRG Stadium, Houston）",
-    "description": "阿根廷对美国的百年美洲杯半决赛，2016 年 6 月 21 日休斯敦 NRG 体育场",
-    "author": "Mark Ralston（Getty Images）",
+    "description": "2016 年 6 月 21 日百年美洲杯半决赛，梅西身穿深蓝色球衣在美国休斯敦的比赛中，与 19 号队友一起庆祝",
+    "author": "使用者提供 · 摄影者不详",
     "license": "未取得授权 · 使用者确认发布并承担相应责任",
     "licenseUrl": "",
-    "whyVerified": "照片为使用者提供的比赛资料图，用户自述已核对为 2016-06-21 美国 0—4 阿根廷的百年美洲杯半决赛（休斯敦 NRG 体育场）。",
-    "photoAlt": "阿根廷对美国的百年美洲杯半决赛，2016 年 6 月 21 日休斯敦 NRG 体育场",
-    "photoFocus": "50% 45%",
-    "alternatives": []
+    "note": "百年美洲杯半决赛：美国 0—4 阿根廷，休斯敦 NRG 体育场。这一版为使用者重新提供的高分辨率照片。",
+    "whyVerified": "百年美洲杯半决赛：美国 0—4 阿根廷，休斯敦 NRG 体育场。这一版为使用者重新提供的高分辨率照片。",
+    "photoAlt": "2016 年 6 月 21 日百年美洲杯半决赛，梅西身穿深蓝色球衣在美国休斯敦的比赛中，与 19 号队友一起庆祝",
+    "photoFocus": "50% 44%",
+    "alternatives": [
+      {
+        "title": "Copa América Centenario semi-final, Houston 2016",
+        "pageUrl": "",
+        "thumbUrl": "",
+        "photoDate": "2016-06-21",
+        "photoEvent": "百年美洲杯 · 半决赛",
+        "photoMatch": "美国 0—4 阿根廷",
+        "author": "Mark Ralston（Getty Images）",
+        "license": "未取得授权 · 使用者确认发布并承担相应责任",
+        "why": "被使用者提供的新照片替换；保留记录以便回退。"
+      }
+    ]
   },
   {
     "year": 2017,
     "found": true,
     "confidence": "high",
-    "source": "使用者提供（图片带 Getty Images 水印，Credit: Hector Vivas，编号 859927394）",
-    "title": "Messi hat-trick in Quito, 2017",
+    "source": "使用者提供（图片带社媒轮播箭头水印；使用者自述已核对日期）",
+    "title": "The hat-trick in Quito, 2017",
     "pageUrl": "https://commons.wikimedia.org/wiki/File%3A2017_FRIENDLY_MATCH_RUSSIA_v_ARGENTINA_-_Messi.jpg",
     "thumbUrl": "",
     "fileUrl": "",
@@ -271,14 +284,26 @@
     "photoEvent": "2018 世界杯南美区预选赛 · 最后一轮",
     "photoMatch": "厄瓜多尔 1—3 阿根廷（梅西帽子戏法）",
     "photoVenue": "阿塔瓦尔帕奥林匹克体育场 · 基多（Estadio Olímpico Atahualpa, Quito）",
-    "description": "Lionel Messi 与队友在 2017 年 10 月 11 日基多世预赛对厄瓜多尔的比赛中",
-    "author": "Hector Vivas（Getty Images）",
+    "description": "2017 年 10 月 11 日基多世预赛，梅西身穿 10 号球衣带球前行，画面下方是倒地的厄瓜多尔球员",
+    "author": "使用者提供 · 摄影者不详",
     "license": "未取得授权 · 使用者确认发布并承担相应责任",
     "licenseUrl": "",
-    "whyVerified": "照片由使用者提供，并声明为 2017-10-11 厄瓜多尔 1—3 阿根廷（梅西帽子戏法）（阿塔瓦尔帕奥林匹克体育场 · 基多（Estadio Olímpico Atahualpa, Quito））。使用者核对后指出原先年份错配，此处已按图片实际内容归位，图片与说明同时移动。",
-    "photoAlt": "Lionel Messi 与队友在 2017 年 10 月 11 日基多世预赛对厄瓜多尔的比赛中",
-    "photoFocus": "50% 42%",
+    "note": "基多高原的帽子戏法：0 比 1 落后时连进三球，把阿根廷从出局边缘带进 2018 世界杯。这一版为使用者重新提供的高分辨率照片。",
+    "whyVerified": "基多高原的帽子戏法：0 比 1 落后时连进三球，把阿根廷从出局边缘带进 2018 世界杯。这一版为使用者重新提供的高分辨率照片。",
+    "photoAlt": "2017 年 10 月 11 日基多世预赛，梅西身穿 10 号球衣带球前行，画面下方是倒地的厄瓜多尔球员",
+    "photoFocus": "50% 40%",
     "alternatives": [
+      {
+        "title": "Messi hat-trick in Quito, 2017",
+        "pageUrl": "https://commons.wikimedia.org/wiki/File%3A2017_FRIENDLY_MATCH_RUSSIA_v_ARGENTINA_-_Messi.jpg",
+        "thumbUrl": "",
+        "photoDate": "2017-10-11",
+        "photoEvent": "2018 世界杯南美区预选赛 · 最后一轮",
+        "photoMatch": "厄瓜多尔 1—3 阿根廷（梅西帽子戏法）",
+        "author": "Hector Vivas（Getty Images）",
+        "license": "未取得授权 · 使用者确认发布并承担相应责任",
+        "why": "被使用者提供的新照片替换；保留记录以便回退。"
+      },
       {
         "title": "File:2017 FRIENDLY MATCH RUSSIA v ARGENTINA - Messi.jpg",
         "pageUrl": "https://commons.wikimedia.org/wiki/File%3A2017_FRIENDLY_MATCH_RUSSIA_v_ARGENTINA_-_Messi.jpg",
@@ -290,8 +315,7 @@
         "license": "CC BY-SA 4.0",
         "why": "被使用者提供的新照片替换；保留记录以便回退。"
       }
-    ],
-    "note": "基多高原的帽子戏法：0 比 1 落后时连进三球，把阿根廷从出局边缘带进 2018 世界杯。"
+    ]
   },
   {
     "year": 2018,
@@ -460,7 +484,7 @@
     "year": 2024,
     "found": true,
     "confidence": "high",
-    "source": "使用者提供（图片带社媒轮播标记「1/8」；使用者自述已核对日期）",
+    "source": "使用者提供（无水印比赛照片；使用者自述已核对日期）",
     "title": "Copa América 2024 champions, Miami",
     "pageUrl": "https://commons.wikimedia.org/wiki/File%3AArgentina_1-1_Ecuador_-_Copa_Am%C3%A9rica_2024_-_Entonaci%C3%B3n_del_himno.jpg",
     "thumbUrl": "",
@@ -474,11 +498,22 @@
     "author": "使用者提供 · 摄影者不详",
     "license": "未取得授权 · 使用者确认发布并承担相应责任",
     "licenseUrl": "",
-    "note": "第 16 座美洲杯：加时 1—0 哥伦比亚。图片右上角带有社媒轮播序号标记「1/8」。",
-    "whyVerified": "第 16 座美洲杯：加时 1—0 哥伦比亚。图片右上角带有社媒轮播序号标记「1/8」。",
+    "note": "第 16 座美洲杯：加时 1—0 哥伦比亚。这一版为更高分辨率的同一场比赛照片，不带社媒轮播标记。",
+    "whyVerified": "第 16 座美洲杯：加时 1—0 哥伦比亚。这一版为更高分辨率的同一场比赛照片，不带社媒轮播标记。",
     "photoAlt": "2024 年 7 月 14 日，梅西与阿根廷队在迈阿密硬石体育场举起美洲杯，背景是 CAMPEÓN 2024",
     "photoFocus": "50% 46%",
     "alternatives": [
+      {
+        "title": "Copa América 2024 champions, Miami",
+        "pageUrl": "https://commons.wikimedia.org/wiki/File%3AArgentina_1-1_Ecuador_-_Copa_Am%C3%A9rica_2024_-_Entonaci%C3%B3n_del_himno.jpg",
+        "thumbUrl": "",
+        "photoDate": "2024-07-14",
+        "photoEvent": "2024 美洲杯 · 决赛",
+        "photoMatch": "阿根廷 1—0 哥伦比亚 · 夺冠",
+        "author": "使用者提供 · 摄影者不详",
+        "license": "未取得授权 · 使用者确认发布并承担相应责任",
+        "why": "被使用者提供的新照片替换；保留记录以便回退。"
+      },
       {
         "title": "File:Argentina 1-1 Ecuador - Copa América 2024 - Entonación del himno.jpg",
         "pageUrl": "https://commons.wikimedia.org/wiki/File%3AArgentina_1-1_Ecuador_-_Copa_Am%C3%A9rica_2024_-_Entonaci%C3%B3n_del_himno.jpg",
@@ -496,7 +531,7 @@
     "year": 2025,
     "found": true,
     "confidence": "high",
-    "source": "使用者提供（图片带社媒轮播标记「4/5」；使用者自述已核对日期）",
+    "source": "使用者提供（无水印比赛照片；使用者自述已核对日期）",
     "title": "Messi vs Colombia, Monumental 2025",
     "pageUrl": "",
     "thumbUrl": "",
@@ -510,11 +545,23 @@
     "author": "使用者提供 · 摄影者不详",
     "license": "未取得授权 · 使用者确认发布并承担相应责任",
     "licenseUrl": "",
-    "note": "这一年阿根廷的主场比赛；图片右上角带有社媒轮播序号标记「4/5」。",
-    "whyVerified": "这一年阿根廷的主场比赛；图片右上角带有社媒轮播序号标记「4/5」。",
+    "note": "这一年阿根廷的主场比赛。这一版为更高分辨率的同一场比赛照片，不带社媒轮播标记。",
+    "whyVerified": "这一年阿根廷的主场比赛。这一版为更高分辨率的同一场比赛照片，不带社媒轮播标记。",
     "photoAlt": "2025 年 6 月 11 日，梅西在布宜诺斯艾利斯纪念碑球场对阵哥伦比亚的世预赛中射门",
     "photoFocus": "52% 50%",
-    "alternatives": []
+    "alternatives": [
+      {
+        "title": "Messi vs Colombia, Monumental 2025",
+        "pageUrl": "",
+        "thumbUrl": "",
+        "photoDate": "2025-06-11",
+        "photoEvent": "2026 世界杯南美区预选赛",
+        "photoMatch": "阿根廷 1—1 哥伦比亚",
+        "author": "使用者提供 · 摄影者不详",
+        "license": "未取得授权 · 使用者确认发布并承担相应责任",
+        "why": "被使用者提供的新照片替换；保留记录以便回退。"
+      }
+    ]
   },
   {
     "year": 2026,
