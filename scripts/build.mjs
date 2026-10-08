@@ -42,41 +42,52 @@ for (const d of DIRS) {
 }
 
 /* ------------------------------------------------------------------ splice --
- * The World Cup exhibition lives in exhibit.html between two markers so it can be
- * read as a standalone page AND appended to the timeline, without maintaining two
- * copies. The home page inlines exhibit.css so the hall carries its own styling
- * the moment it is reached.
+ * The visitor's guide and the World Cup exhibition live in exhibit.html between
+ * their own markers, so both can be read as a standalone page AND spliced into the
+ * timeline, without maintaining two copies. The home page inlines exhibit.css so
+ * the guide and the hall carry their own styling the moment they are reached.
  */
-const exhibitSrc = await readFile(path.join(ROOT, 'exhibit.html'), 'utf8');
-const startMark = '<!-- EXHIBIT:START';
-const endMark = '<!-- EXHIBIT:END -->';
-const startAt = exhibitSrc.indexOf(startMark);
-const endAt = exhibitSrc.indexOf(endMark);
-if (startAt < 0 || endAt < 0) {
-  console.error('build: exhibit.html is missing its EXHIBIT:START / EXHIBIT:END markers');
-  process.exit(1);
+function extractBlock(source, name) {
+  const start = source.indexOf(`<!-- ${name}:START`);
+  const end = source.indexOf(`<!-- ${name}:END -->`);
+  if (start < 0 || end < 0) {
+    console.error(`build: exhibit.html is missing its ${name}:START / ${name}:END markers`);
+    process.exit(1);
+  }
+  return source.slice(source.indexOf('-->', start) + 3, end).trim();
 }
-const exhibitBlock = exhibitSrc.slice(exhibitSrc.indexOf('-->', startAt) + 3, endAt).trim();
+
+const exhibitSrc = await readFile(path.join(ROOT, 'exhibit.html'), 'utf8');
+const exhibitBlock = extractBlock(exhibitSrc, 'EXHIBIT');
+const guideBlock = extractBlock(exhibitSrc, 'GUIDE');
 const exhibitCss = await readFile(path.join(ROOT, 'exhibit.css'), 'utf8');
 
-/* the standalone page: the authoring markers and the linked stylesheet removed
-   (the CSS is inlined there too, so the page is self-contained) */
+/* the standalone page: the authoring markers, their explanatory comments and the
+   linked stylesheet are all removed, and the CSS is inlined so the page stands
+   alone */
 const standalone = exhibitSrc
-  .replace(/<!-- EXHIBIT:START[\s\S]*?-->/, '')
-  .replace('<!-- EXHIBIT:END -->', '')
+  .replace(/<!-- GUIDE:START[\s\S]*?-->\s*/, '')
+  .replace('<!-- GUIDE:END -->\n', '')
+  .replace(/<!-- EXHIBIT:START[\s\S]*?-->\s*/, '')
+  .replace('<!-- EXHIBIT:END -->\n', '')
   .replace(/^.*?<link rel="stylesheet" href="exhibit\.css" \/>\n/m, '')
   .replace('</head>', `  <style>\n${exhibitCss}\n  </style>\n</head>`);
 await writeFile(path.join(DIST, 'exhibit.html'), standalone);
 
-/* the timeline: the same block appended before </main>, plus the inline styles */
+/* the timeline: the guide at the top, the hall before the closing wall, plus the
+   inline styles */
 let home = await readFile(path.join(ROOT, 'index.html'), 'utf8');
-if (!home.includes('<!-- EXHIBIT:INLINE -->')) {
-  console.error('build: index.html is missing its <!-- EXHIBIT:INLINE --> placeholder');
-  process.exit(1);
+for (const [placeholder, block] of [
+  ['<!-- GUIDE:INLINE -->', guideBlock],
+  ['<!-- EXHIBIT:INLINE -->', exhibitBlock],
+]) {
+  if (!home.includes(placeholder)) {
+    console.error(`build: index.html is missing its ${placeholder} placeholder`);
+    process.exit(1);
+  }
+  home = home.replace(placeholder, block);
 }
-home = home
-  .replace('<!-- EXHIBIT:INLINE -->', exhibitBlock)
-  .replace('</head>', `  <style>\n${exhibitCss}\n  </style>\n</head>`);
+home = home.replace('</head>', `  <style>\n${exhibitCss}\n  </style>\n</head>`);
 await writeFile(path.join(DIST, 'index.html'), home);
 
 async function walk(dir) {

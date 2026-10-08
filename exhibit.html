@@ -29,6 +29,48 @@
   <p class="ex-open__scroll" aria-hidden="true">往下 · Scroll</p>
 </header>
 
+<!-- ===================== HOW TO READ THIS MUSEUM ===================== -->
+<!-- GUIDE:START — the visitor's guide is spliced into the top of the timeline by
+     scripts/build.mjs, so it is authored once and used on both pages. -->
+<section class="ex-guide" id="how-to">
+  <div class="ex-guide__inner">
+    <p class="ex-guide__kicker">How to read this museum · 参观指南</p>
+    <h2 class="ex-guide__title">怎么看这个网站</h2>
+    <p class="ex-guide__lede">这是一条从 2005 滚到 2026 的时间轴。每一格是一位 18 岁到 39 岁的梅西，和那一年他真正经历的事。</p>
+
+    <ol class="ex-guide__steps">
+      <li>
+        <span class="ex-guide__num">01</span>
+        <h3>点照片 · 进入那一年的档案</h3>
+        <p>照片下面的日期、比赛和场地就是那一年的入口。点下去展开完整档案：出场与进球、关键比赛、当年的荣誉，以及那一年完整的故事。</p>
+      </li>
+      <li>
+        <span class="ex-guide__num">02</span>
+        <h3>滚轮往下 · 从 2005 走到 2026</h3>
+        <p>沿着页面往下滚，一年一格。左侧那串年份随时可以点击，直接跳到想看的那一年。</p>
+      </li>
+      <li>
+        <span class="ex-guide__num">03</span>
+        <h3>照片角上 · 这一年属于哪场比赛</h3>
+        <p>照片右下角的铭牌写着赛事与年龄，照片下面的小字写着日期、对手、比分和球场。照片按自己的比例成版，不会为了排版被裁掉。</p>
+      </li>
+      <li>
+        <span class="ex-guide__num">04</span>
+        <h3>档案打开后 · 可以继续翻年</h3>
+        <p>档案底部有上一年 / 下一年，键盘的 ← → 也可以。按 Esc 或点右上角 ✕ 关闭，关掉后会回到刚才的位置，不会丢失进度。</p>
+      </li>
+      <li>
+        <span class="ex-guide__num">05</span>
+        <h3>滚到最后 · 展厅与告别</h3>
+        <p>2026 年之后是「世界杯二十年」特别展厅 —— 六届世界杯，六张照片；再往下，是这个网站的最后一句话。</p>
+      </li>
+    </ol>
+
+    <p class="ex-guide__foot">看照片就够了。<span>照片优先，故事其次，数据最后。</span></p>
+  </div>
+</section>
+<!-- GUIDE:END -->
+
 <!-- ===================== THE SIX CHAPTERS ===================== -->
 <!-- EXHIBIT:START — this block is spliced into the end of the main timeline by
      scripts/build.mjs, so the six chapters are authored exactly once. -->
@@ -152,12 +194,11 @@
     <p class="epilogue__journey">退役 · RETIRED 31 AUG 2026</p>
     <p class="epilogue__gracias">Gracias, Leo.</p>
     <p class="epilogue__note" id="epilogue-note"></p>
+    <p class="ex-end__back ex-end__back--wall">
+      <a href="#gallery">回到世界杯特别展厅 · 2006 — 2026</a>
+    </p>
   </div>
   <div class="epilogue__fade" aria-hidden="true"></div>
-
-  <p class="ex-end__back">
-    <a href="#gallery">回到世界杯特别展厅 · 2006 — 2026</a>
-  </p>
 </section>
 <!-- EXHIBIT:END -->
 

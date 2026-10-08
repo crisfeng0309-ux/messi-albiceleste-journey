@@ -113,42 +113,63 @@ check(!/<video|<canvas|<iframe/.test(html), 'no fabricated imagery or embeds');
 check(!/position:\s*absolute[^;]*;[^}]*\.ex__text/.test(cssClean), 'captions are laid out beside the plate, never over the picture');
 check(!/\.ex__text\s*\{[^}]*position:\s*absolute/.test(cssClean), 'the caption block is not absolutely positioned over the frame');
 
-/* ---- 5. the hall is reachable, and part of the timeline -------------------- */
-console.log('\n— reachable, and part of the timeline —');
+/* ---- 5. the guide, the hall, and their order ------------------------------ */
+console.log('\n— reachable, and in the intended reading order —');
 check(/href="#gallery"/.test(home), 'the cover links into the hall');
 check(/id="gallery"/.test(home) || /EXHIBIT:INLINE/.test(home), 'the timeline reserves a place for the hall');
+check(/GUIDE:INLINE/.test(home), 'the timeline reserves a place for the visitor guide');
 check(/exhibit\.html/.test(readFileSync(path.join(ROOT, 'scripts', 'build.mjs'), 'utf8')), 'the standalone page ships in the build');
 
-/* after the build the hall must be spliced into the timeline, in order, once.
-   The intended reading order is: 2005—2026 years → the World Cup hall →
-   the epilogue's closing wall (Gracias, Leo.) → the colophon. The epilogue is the
-   very last thing the visitor sees, so it must come AFTER the hall. */
+/* the guide must actually teach the interactions a first-time visitor needs */
+const guideSrc = readFileSync(path.join(ROOT, 'exhibit.html'), 'utf8');
+const guideBlock = guideSrc.slice(guideSrc.indexOf('<!-- GUIDE:START'), guideSrc.indexOf('<!-- GUIDE:END -->'));
+check(/点照片/.test(guideBlock), 'the guide explains clicking a photograph');
+check(/滚|往下/.test(guideBlock), 'the guide explains scrolling the timeline');
+check(/年份/.test(guideBlock), 'the guide explains the year rail');
+check(/Esc|✕|关闭/.test(guideBlock), 'the guide explains how to close a dossier');
+check(/展厅/.test(guideBlock), 'the guide mentions the exhibition at the end');
+
+/* after the build the page must read: guide → years → hall → closing wall →
+   colophon. The epilogue is the very last thing the visitor sees, so it must come
+   AFTER the hall. */
 const built = path.join(ROOT, 'dist', 'index.html');
 if (existsSync(built)) {
   const page = readFileSync(built, 'utf8');
   const pos = {
+    guide: page.indexOf('id="how-to"'),
     years: page.indexOf('id="years"'),
     gallery: page.indexOf('id="gallery"'),
     epilogue: page.indexOf('id="epilogue"'),
     colophon: page.indexOf('class="colophon"'),
     mainEnd: page.indexOf('</main>'),
   };
-  check(pos.years > 0 && pos.gallery > pos.years, 'the hall follows the 2005—2026 timeline');
+  check(pos.guide > 0 && pos.years > pos.guide, 'the guide comes before the first year');
+  check(pos.gallery > pos.years, 'the hall follows the 2005—2026 timeline');
   check(pos.epilogue > pos.gallery, 'the closing wall (Gracias, Leo.) comes after the hall — it is the last page');
   check(pos.colophon > pos.epilogue, 'the colophon closes the document after the wall');
   check(pos.mainEnd > pos.colophon, 'everything sits inside the timeline container');
+  check((page.match(/id="how-to"/g) || []).length === 1, 'the guide appears exactly once');
   check((page.match(/id="gallery"/g) || []).length === 1, 'the hall appears exactly once');
   check((page.match(/id="epilogue"/g) || []).length === 1, 'the closing wall appears exactly once');
   check((page.match(/id="wc2022"/g) || []).length === 1, 'each chapter appears exactly once after splicing');
   // only real authoring markers / placeholders count — the guidance comment in
   // index.html mentions their names in prose and must not trip this
   check(
-    !/<!--\s*EXHIBIT:(INLINE|START|END)\s*(—|-->)/.test(page),
+    !/<!--\s*(EXHIBIT|GUIDE):(INLINE|START|END)\s*(—|-->)/.test(page),
     'no authoring markers leak into the built page'
   );
-  check(/<style>[\s\S]*\.ex-axis/.test(page), 'the hall carries its own styling inline on the timeline');
+  check(/<style>[\s\S]*\.ex-guide[\s\S]*\.ex-axis/.test(page), 'the guide and the hall carry their styling inline');
   check(/href="#gallery"/.test(page), 'the closing wall links back to the hall');
   check(!/href="exhibit\.html"/.test(page), 'no leftover link to the standalone page from the cover');
+
+  /* the back-link must sit inside the centred epilogue column, or it drifts off
+     to one side of the closing wall instead of aligning with the text above it */
+  const sectionStart = pos.epilogue;
+  const sectionEnd = page.indexOf('</section>', sectionStart);
+  const epi = page.slice(sectionStart, sectionEnd);
+  const innerEnd = epi.indexOf('</div>');
+  const backAt = epi.indexOf('ex-end__back');
+  check(backAt > 0 && backAt < innerEnd, 'the back-link sits inside the centred epilogue column');
 } else {
   console.log('  (dist/index.html not built yet — run node scripts/build.mjs)');
 }

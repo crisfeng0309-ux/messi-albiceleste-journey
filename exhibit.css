@@ -89,6 +89,113 @@
   color: rgba(237, 230, 214, 0.4);
 }
 
+/* ------------------------------------------------- the visitor's guide ----- */
+/* Sits at the top of the timeline, right after the journey has been entered, so a
+   first-time visitor meets the three things they can actually do before any of the
+   content. Kept quiet: it is a caption on the wall, not a landing page. */
+.ex-guide {
+  padding: clamp(5rem, 14vh, 10rem) clamp(1.4rem, 6vw, 6rem) clamp(4rem, 10vh, 7rem);
+  border-bottom: 1px solid var(--ex-rule);
+}
+
+.ex-guide__inner {
+  max-width: 62rem;
+  margin: 0 auto;
+}
+
+.ex-guide__kicker {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.82vw, 0.72rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ex-gold);
+}
+
+.ex-guide__title {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--ex-paper);
+  margin-top: clamp(0.9rem, 2.4vh, 1.5rem);
+}
+
+.ex-guide__lede {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.86rem, 1.1vw, 0.98rem);
+  line-height: 2.1;
+  letter-spacing: 0.05em;
+  color: var(--ex-paper-dim);
+  margin-top: clamp(1.1rem, 2.6vh, 1.7rem);
+  max-width: 46ch;
+}
+
+.ex-guide__steps {
+  list-style: none;
+  margin: clamp(2.6rem, 7vh, 4.4rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: clamp(1.8rem, 3.4vw, 3rem);
+  /* the numbers sit on a hairline that ties the steps together */
+  border-top: 1px solid var(--ex-rule);
+  padding-top: clamp(1.6rem, 4vh, 2.4rem);
+}
+
+.ex-guide__steps li {
+  position: relative;
+  padding-top: clamp(1rem, 2.6vh, 1.6rem);
+}
+
+.ex-guide__num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.34em;
+  color: var(--ex-gold);
+  margin-bottom: clamp(0.7rem, 1.8vh, 1.1rem);
+}
+
+.ex-guide__steps h3 {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.95rem, 1.25vw, 1.1rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--ex-paper);
+  margin: 0;
+}
+
+.ex-guide__steps p {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  line-height: 2;
+  letter-spacing: 0.04em;
+  color: rgba(237, 230, 214, 0.5);
+  margin: 0.7rem 0 0;
+}
+
+.ex-guide__foot {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.82rem, 1.05vw, 0.94rem);
+  letter-spacing: 0.1em;
+  color: var(--ex-paper-dim);
+  margin-top: clamp(2.6rem, 7vh, 4rem);
+}
+
+.ex-guide__foot span {
+  color: rgba(237, 230, 214, 0.42);
+  margin-left: 0.6em;
+}
+
+@media (max-width: 900px) {
+  .ex-guide { padding-left: 2.6rem; }
+  .ex-guide__steps { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .ex-guide__title { font-size: clamp(1.3rem, 7vw, 1.8rem); }
+}
+
 /* ------------------------------------------------------------------ axis --- */
 .ex-axis {
   position: relative;
@@ -284,6 +391,9 @@
   text-transform: uppercase;
   margin-top: clamp(2rem, 5vh, 3rem);
 }
+
+/* the same link, when it sits inside the epilogue's centred column */
+.ex-end__back--wall { margin-top: clamp(2.6rem, 7vh, 4.2rem); }
 
 .ex-end__back a {
   color: rgba(237, 230, 214, 0.5);
