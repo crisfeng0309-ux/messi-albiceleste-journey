@@ -43,6 +43,14 @@
 
 * { box-sizing: border-box; }
 
+/**
+ * The overlay elements (archive, journey) are toggled with the `hidden`
+ * attribute. Several of them also set `display`, which would otherwise override
+ * the user-agent's `[hidden] { display: none }` and leave an invisible
+ * full-screen layer swallowing every click. This rule makes `hidden` absolute.
+ */
+[hidden] { display: none !important; }
+
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: auto;
