@@ -103,9 +103,12 @@ export function renderTimeline(root, years, { onOpen }) {
    * frame is a tall plate and a landscape frame is a wide one — one uniform card
    * size for all 22 years would flatten exactly the thing the design is about.
    *
-   * A frame that would be taller than the viewport is widened instead of cropped,
-   * because cutting off a person (or a score line printed across the foot of the
-   * picture) is worse than an unusually wide plate.
+   * Two guards keep it harmonious rather than merely different:
+   *  · a frame that would be taller than the viewport is widened instead of
+   *    cropped, because cutting off a person (or a score line printed across the
+   *    foot of the picture) is worse than an unusually wide plate;
+   *  · a low-resolution photograph is displayed at the size it can actually
+   *    support instead of being stretched into a blur.
    */
   root.querySelectorAll('.year__frame img').forEach((img) => {
     const adopt = () => {
@@ -122,18 +125,25 @@ export function renderTimeline(root, years, { onOpen }) {
       const columnWidth = frame.parentElement ? frame.parentElement.clientWidth : frame.clientWidth;
       const maxHeight = window.innerHeight * 0.86;
 
-      let width = '100%';
-      let grew = false;
+      // how wide are we allowed to draw it?
+      let maxWidth = columnWidth;
       if (columnWidth > 0 && columnWidth / clamped > maxHeight) {
-        // would overflow vertically: grow the plate sideways so nothing is cut
-        width = `${Math.round(maxHeight * clamped)}px`;
-        grew = true;
+        // would overflow vertically: grow sideways rather than crop
+        maxWidth = Math.max(maxWidth, Math.round(maxHeight * clamped));
       }
 
+      // Never stretch a small picture beyond what it can carry. Hand-supplied
+      // photographs are often only ~550px wide, and blowing those up to a 500px
+      // plate would show every artefact; a modest limit keeps the page calm.
+      const STRETCH_LIMIT = 1.25;
+      const cap = Math.round(Math.min(maxWidth, img.naturalWidth * STRETCH_LIMIT));
+      const grew = cap > columnWidth + 4;
+
       frame.style.setProperty('--photo-ar', String(clamped));
-      frame.style.width = width;
+      frame.style.width = columnWidth > 0 ? `${cap}px` : '100%';
       frame.dataset.orientation =
         ratio < 0.95 ? (ratio < 0.8 ? 'poster' : 'portrait') : ratio > 1.5 ? 'panorama' : 'landscape';
+      frame.dataset.scale = cap < columnWidth - 4 ? 'native' : 'full';
       // a growable grid track lets a widened plate keep its proportions
       const figure = frame.closest('.year__figure');
       if (figure) figure.style.gridColumn = grew ? '1 / -1' : '';
