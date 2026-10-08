@@ -204,18 +204,18 @@ export const PHOTO_CREDITS = {
   2017: {
     "photo": "assets/photos/2017.jpg",
     "photoSmall": "assets/photos/2017-900.jpg",
-    "photoWidth": 1000,
+    "photoWidth": 594,
     "photoDate": "2017-10-11",
     "photoEvent": "2018 世界杯南美区预选赛 · 最后一轮",
     "photoMatch": "厄瓜多尔 1—3 阿根廷（梅西帽子戏法）",
     "photoVenue": "阿塔瓦尔帕奥林匹克体育场 · 基多（Estadio Olímpico Atahualpa, Quito）",
-    "photoSource": "使用者提供（无水印比赛照片；使用者自述已核对日期）",
+    "photoSource": "使用者提供（图片带 Getty Images 水印，Credit: Hector Vivas，编号 859927394）",
     "photoSourceUrl": "https://commons.wikimedia.org/wiki/File%3A2017_FRIENDLY_MATCH_RUSSIA_v_ARGENTINA_-_Messi.jpg",
-    "photoAuthor": "使用者提供 · 摄影者不详",
+    "photoAuthor": "Hector Vivas（Getty Images）",
     "photoLicense": "未取得授权 · 使用者确认发布并承担相应责任",
     "verified": true,
-    "photoFocus": "50% 30%",
-    "photoNote": "核对依据：这是 2017 年最重要的一夜：基多高原帽子戏法，把阿根廷从出局边缘带进 2018 世界杯。用户提供并核对为 2017-10-11 厄瓜多尔 1—3 阿根廷。"
+    "photoFocus": "50% 42%",
+    "photoNote": "基多高原的帽子戏法：0 比 1 落后时连进三球，把阿根廷从出局边缘带进 2018 世界杯。"
   },
   2018: {
     "photo": "assets/photos/2018.jpg",
@@ -251,19 +251,19 @@ export const PHOTO_CREDITS = {
   },
   2020: {
     "photo": "assets/photos/2020.jpg",
-    "photoSmall": "",
-    "photoWidth": 594,
+    "photoSmall": "assets/photos/2020-900.jpg",
+    "photoWidth": 1000,
     "photoDate": "2020-10-08",
     "photoEvent": "2022 世界杯南美区预选赛",
     "photoMatch": "阿根廷 1—0 厄瓜多尔（梅西点球）",
     "photoVenue": "阿尔贝托·J·阿曼多球场 · 布宜诺斯艾利斯（La Bombonera, Buenos Aires）",
-    "photoSource": "使用者提供（图片带 Getty Images 水印，Credit: Hector Vivas，编号 859927394）",
+    "photoSource": "使用者提供（无水印比赛照片；使用者自述已核对年份）",
     "photoSourceUrl": "",
-    "photoAuthor": "Hector Vivas（Getty Images）",
+    "photoAuthor": "使用者提供 · 摄影者不详",
     "photoLicense": "未取得授权 · 使用者确认发布并承担相应责任",
     "verified": true,
-    "photoFocus": "55% 40%",
-    "photoNote": "核对依据：照片由使用者提供，声明为 2020-10-08 阿根廷 1—0 厄瓜多尔（梅西点球）（阿尔贝托·J·阿曼多球场 · 布宜诺斯艾利斯（La Bombonera, Buenos Aires））。用户核对后指出原先的图片与年份错配，此处已按图片实际内容归位。"
+    "photoFocus": "50% 34%",
+    "photoNote": "世界杯南美区预选赛，糖果盒球场；2020 年因疫情阿根廷几乎空转，这一年只有 4 场。"
   },
   2021: {
     "photo": "assets/photos/2021.jpg",
