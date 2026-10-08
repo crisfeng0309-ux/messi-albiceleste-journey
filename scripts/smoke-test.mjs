@@ -11,6 +11,8 @@ const photoYears = YEARS.filter((d) => d.hasPhoto);
 const gapYears = YEARS.filter((d) => !d.hasPhoto);
 const targets = [
   '/',
+  '/exhibit.html',
+  '/exhibit.css',
   '/styles.css',
   '/src/main.js',
   '/src/data/index.js',
@@ -22,6 +24,8 @@ const targets = [
   '/assets/favicon.svg',
   '/assets/og-cover.jpg',
   '/robots.txt',
+  // the World Cup exhibition's own plates
+  ...['2006', '2010', '2014', '2018', '2022', '2026'].map((y) => `/assets/photos/wc/${y}.jpg`),
   ...photoYears.map((d) => `/${d.photo}`),
 ];
 

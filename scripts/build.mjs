@@ -19,6 +19,8 @@ const DIST = path.join(ROOT, 'dist');
 
 const FILES = [
   'index.html',
+  'exhibit.html', // the 2006—2026 World Cup exhibition ("the last hall")
+  'exhibit.css',
   '404.html',
   'self-test.html', // the browser self-check ships with the site so a deployment can be verified in place
   'styles.css',

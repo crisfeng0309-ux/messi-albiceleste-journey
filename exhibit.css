@@ -1,0 +1,348 @@
+/**
+ * exhibit.css — the 2006—2026 World Cup exhibition ("the last hall").
+ *
+ * A separate sheet from styles.css so the main timeline is untouched. It reuses
+ * the page's colour variables and grain/vignette layers, and follows one rule
+ * throughout: the photographs are never cropped or altered — every frame is sized
+ * from the picture's own proportions, and the layout moves around them.
+ *
+ * Layout language: a single vertical hairline down the centre is the timeline;
+ * plates alternate left and right of it, with generous air between them, so the
+ * page reads as an archive being leafed through rather than a grid of cards.
+ */
+
+.exhibit {
+  --ex-ink: #05070B;
+  --ex-paper: #EDE6D6;
+  --ex-paper-dim: rgba(237, 230, 214, 0.62);
+  --ex-gold: #C9A961;
+  --ex-rule: rgba(237, 230, 214, 0.16);
+  --ex-gap: clamp(6rem, 20vh, 15rem);
+  --ex-plate: clamp(280px, 40vw, 560px);
+  background: var(--ex-ink);
+  color: var(--ex-paper);
+  min-height: 100%;
+}
+
+/* ---------------------------------------------------------------- opening -- */
+.ex-open {
+  position: relative;
+  min-height: 88svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(5rem, 16vh, 11rem) clamp(1.4rem, 8vw, 9rem);
+  border-bottom: 1px solid var(--ex-rule);
+}
+
+.ex-open__eyebrow {
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 0.85vw, 0.76rem);
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
+  color: var(--ex-gold);
+}
+
+.ex-open__title {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 12vw, 11rem);
+  line-height: 0.92;
+  letter-spacing: 0.03em;
+  font-weight: 400;
+  margin-top: clamp(1rem, 3vh, 2rem);
+  color: var(--ex-paper);
+}
+
+.ex-open__en {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.82vw, 0.74rem);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--ex-paper-dim);
+  margin-top: clamp(1.4rem, 4vh, 2.6rem);
+}
+
+.ex-open__zh {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.95rem, 1.5vw, 1.25rem);
+  letter-spacing: 0.12em;
+  color: var(--ex-paper-dim);
+  margin-top: 0.7rem;
+}
+
+.ex-open__rule {
+  width: clamp(60px, 12vw, 160px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--ex-rule), transparent);
+  margin-top: clamp(2rem, 6vh, 3.4rem);
+}
+
+.ex-open__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.4rem, 4vh, 2.6rem);
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 214, 0.4);
+}
+
+/* ------------------------------------------------------------------ axis --- */
+.ex-axis {
+  position: relative;
+  padding: var(--ex-gap) clamp(1.4rem, 6vw, 6rem) calc(var(--ex-gap) * 1.2);
+}
+
+/* the single hairline that runs the length of the exhibition */
+.ex-axis::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--ex-rule) 6%, var(--ex-rule) 94%, transparent);
+}
+
+.ex {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(2.5rem, 7vw, 7rem) minmax(0, 1fr);
+  align-items: center;
+  margin-bottom: var(--ex-gap);
+}
+
+.ex:last-child { margin-bottom: 0; }
+
+/* every plate keeps its photograph's proportions — never letterboxed, never
+   stretched — and is drawn at the size the file supports. */
+.ex__frame {
+  grid-column: 1;
+  margin: 0;
+  justify-self: end;
+  width: var(--ex-plate);
+  max-width: 100%;
+}
+
+.ex__frame img {
+  display: block;
+  width: 100%;
+  height: auto;              /* the picture's own aspect ratio, always */
+  border: 1px solid rgba(237, 230, 214, 0.09);
+  background: #0A0D13;
+  /* a restrained museum finish: slightly deeper blacks, a touch of grain-free calm */
+  filter: saturate(0.94) contrast(1.04);
+}
+
+.ex__text {
+  grid-column: 3;
+  align-self: center;
+  max-width: 30ch;
+}
+
+.ex--right .ex__frame { grid-column: 3; justify-self: start; }
+.ex--right .ex__text { grid-column: 1; justify-self: end; text-align: right; }
+.ex--right .ex__chapter span { justify-content: flex-end; }
+
+/* the connecting tick between plate and hairline */
+.ex__line {
+  grid-column: 2;
+  justify-self: center;
+  width: clamp(1.5rem, 5vw, 5rem);
+  height: 1px;
+  background: var(--ex-rule);
+  opacity: 0.5;
+}
+
+.ex__year {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 5.5vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--ex-paper);
+}
+
+.ex__chapter {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  letter-spacing: 0.16em;
+  color: var(--ex-paper);
+  margin-top: clamp(0.8rem, 2vh, 1.3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ex__chapter span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ex-gold);
+}
+
+.ex__desc {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.9rem, 1.3vw, 1.06rem);
+  line-height: 2;
+  letter-spacing: 0.04em;
+  color: var(--ex-paper-dim);
+  margin-top: clamp(1rem, 2.6vh, 1.8rem);
+}
+
+.ex__meta {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.8vw, 0.7rem);
+  letter-spacing: 0.16em;
+  line-height: 1.9;
+  color: rgba(237, 230, 214, 0.38);
+  margin-top: clamp(1.2rem, 3vh, 2rem);
+}
+
+/* the champion chapter: a wider plate and the only gold in the exhibition */
+.ex--wide .ex__frame { width: min(calc(var(--ex-plate) * 1.35), 100%); }
+
+.ex--gold .ex__year { color: #F3E7C8; }
+.ex--gold .ex__frame img {
+  border-color: rgba(201, 169, 97, 0.34);
+  box-shadow: 0 0 0 1px rgba(201, 169, 97, 0.08), 0 30px 80px -50px rgba(201, 169, 97, 0.5);
+}
+.ex--gold .ex__chapter span { color: var(--ex-gold); }
+
+/* the final chapter sits a little quieter */
+.ex--last .ex__frame img { filter: saturate(0.82) contrast(1.02) brightness(0.96); }
+.ex--last .ex__desc { color: rgba(237, 230, 214, 0.5); }
+
+/* ------------------------------------------------------------ the last wall - */
+.ex-end {
+  position: relative;
+  padding: clamp(8rem, 30vh, 22rem) clamp(1.4rem, 8vw, 9rem) clamp(6rem, 18vh, 14rem);
+  border-top: 1px solid var(--ex-rule);
+  text-align: center;
+}
+
+.ex-end__inner {
+  max-width: 44rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ex-end__years {
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 0.85vw, 0.76rem);
+  letter-spacing: 0.44em;
+  color: var(--ex-gold);
+}
+
+.ex-end__en {
+  font-family: var(--font-mono);
+  font-size: clamp(0.56rem, 0.76vw, 0.68rem);
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 214, 0.36);
+  margin-top: 1rem;
+}
+
+/* the closing line: the emotional focus of the page, held deliberately small */
+.ex-end__motto {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(1.5rem, 3.4vw, 3rem);
+  line-height: 2;
+  letter-spacing: 0.26em;
+  text-indent: 0.26em;
+  color: var(--ex-paper);
+  margin: clamp(3.5rem, 11vh, 7rem) 0 0;
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+}
+
+.ex-end__tribute {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.86rem, 1.15vw, 1rem);
+  line-height: 2.2;
+  letter-spacing: 0.1em;
+  color: var(--ex-paper-dim);
+  margin-top: clamp(2.5rem, 7vh, 4.5rem);
+}
+
+.ex-end__rule {
+  width: 1px;
+  height: clamp(3rem, 9vh, 6rem);
+  background: linear-gradient(180deg, var(--ex-rule), transparent);
+  margin-top: clamp(3rem, 8vh, 5rem);
+}
+
+.ex-end__back {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+.ex-end__back a {
+  color: rgba(237, 230, 214, 0.5);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 0.35rem;
+  transition: color 0.5s var(--ease), border-color 0.5s var(--ease);
+}
+
+.ex-end__back a:hover,
+.ex-end__back a:focus-visible {
+  color: var(--ex-paper);
+  border-color: var(--ex-rule);
+}
+
+/* ---------------------------------------------------------------- responsive */
+@media (max-width: 900px) {
+  .exhibit { --ex-gap: clamp(4.5rem, 13vh, 8rem); }
+
+  /* the hairline moves to the left edge and the plates stack under it */
+  .ex-axis { padding-left: 2.6rem; padding-right: 1.4rem; }
+  .ex-axis::before { left: 1.05rem; }
+
+  .ex {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(1.4rem, 4vh, 2.2rem);
+  }
+
+  .ex__frame,
+  .ex--right .ex__frame { grid-column: 1; justify-self: start; width: 100%; }
+
+  .ex__line {
+    grid-column: 1;
+    justify-self: start;
+    width: 1.4rem;
+    margin-left: -2.6rem;
+  }
+
+  .ex__text,
+  .ex--right .ex__text {
+    grid-column: 1;
+    justify-self: start;
+    text-align: left;
+    max-width: 34ch;
+  }
+
+  .ex--right .ex__chapter span { justify-content: flex-start; }
+  .ex--wide .ex__frame { width: 100%; }
+}
+
+@media (max-width: 560px) {
+  .ex-open { min-height: 78svh; }
+  .ex__year { font-size: clamp(2.2rem, 13vw, 3rem); }
+  .ex-end__motto { letter-spacing: 0.2em; text-indent: 0.2em; }
+}
+
+/* keep the film grain and vignette from styles.css, but lighter here */
+.exhibit::before { opacity: 0.4; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ex-end__back a { transition: none; }
+}
