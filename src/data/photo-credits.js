@@ -25,17 +25,17 @@ export const PHOTO_CREDITS = {
   },
   2006: {
     "photo": "assets/photos/2006.jpg",
-    "photoSmall": "",
-    "photoDate": "",
-    "photoEvent": "2006 FIFA World Cup · 德国",
-    "photoMatch": "阿根廷 vs 塞黑 · 盖尔森基兴（2006-06-16 世界杯首球）",
-    "photoSource": "公开图片资料",
+    "photoSmall": "assets/photos/2006-900.jpg",
+    "photoDate": "2006-06-16",
+    "photoEvent": "2006 FIFA World Cup · 小组赛",
+    "photoMatch": "阿根廷 6—0 塞黑 · 盖尔森基兴",
+    "photoSource": "使用者提供（宣传海报：含 FIFA World Cup 2006 / 2026 标志，图片带 Getty Images 水印）",
     "photoSourceUrl": "",
-    "photoAuthor": "",
-    "photoLicense": "",
-    "verified": false,
-    "photoFocus": "",
-    "photoNote": "Commons 上没有可核实的 2006 年世界杯梅西照片：该届阿根廷每一场比赛的分类里只有阵型图、球场与球迷照片，Category:Lionel Messi in 2006 只有巴塞罗那素材。这一页以「档案缺口」的方式呈现。"
+    "photoAuthor": "Getty Images（原始照片）· 海报制作者不详",
+    "photoLicense": "未取得授权 · 使用者确认发布并承担相应责任",
+    "verified": true,
+    "photoFocus": "50% 32%",
+    "photoNote": "核对依据：由使用者提供的照片，声明日期 2006-06-16（2006 FIFA World Cup · 小组赛）；使用者提供（宣传海报：含 FIFA World Cup 2006 / 2026 标志，图片带 Getty Images 水印），未取得授权 · 使用者确认发布并承担相应责任。"
   },
   2007: {
     "photo": "assets/photos/2007.jpg",

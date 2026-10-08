@@ -90,14 +90,15 @@ body::after {
   mix-blend-mode: overlay;
 }
 
-/* Vignette */
+/* Vignette — kept gentle, because it sits above the photographs and a heavy
+   vignette darkens whatever plate happens to be near the screen edge. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 899;
   pointer-events: none;
-  background: radial-gradient(120% 90% at 50% 45%, transparent 42%, rgba(0, 0, 0, 0.55) 100%);
+  background: radial-gradient(130% 100% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.34) 100%);
 }
 
 /* ==========================================================================
@@ -558,14 +559,18 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
 
 /**
  * A frame adopts its photograph's proportions (set from the image itself in
- * src/ui/timeline.js). Because the plates are meant to differ — a portrait frame
- * is a tall plate, a landscape frame is a wide one — the only guard needed is
- * that a very tall plate never becomes taller than the screen.
+ * src/ui/timeline.js). Plates are meant to differ — a portrait frame is a tall
+ * plate, a landscape frame is a wide one.
+ *
+ * When a photograph is taller than the screen, the frame WIDENS so the picture
+ * still fits whole rather than being cropped: cropping a person, or a score line
+ * printed at the foot of the image, is worse than a wide tall plate.
  */
 .year__frame { max-height: 86svh; }
 
-/* portrait plates: slightly quieter crop anchor, a touch more outline */
-.year__frame[data-orientation='portrait'] {
+/* portrait plates: anchored a little higher, with a hairline outline */
+.year__frame[data-orientation='portrait'],
+.year__frame[data-orientation='poster'] {
   border: 1px solid rgba(237, 230, 214, 0.08);
 }
 
@@ -582,6 +587,21 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
   opacity: 0.9;
   transition: opacity 0.8s var(--ease);
 }
+
+/**
+ * Some plates are already designed objects: a poster with a competition name and
+ * a score printed across the foot of the image. Those get no bottom darkening and
+ * their labels move to the top, so the picture's own text is never covered.
+ */
+.year__frame[data-orientation='poster']::after { background: none; }
+
+.year__frame[data-orientation='poster'] .year__frame-plate {
+  top: clamp(0.7rem, 1.4vw, 1.1rem);
+  bottom: auto;
+  align-items: flex-start;
+}
+
+.year__frame[data-orientation='poster'] img { object-position: 50% 50%; }
 
 .year__frame:hover::after { opacity: 0.7; }
 .year__frame:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
@@ -738,7 +758,13 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
 .year--feature .year__index { font-size: clamp(5rem, 16vw, 17rem); }
 .year--feature .year__chapter { color: var(--accent); }
 
-.year--feature .year__frame { aspect-ratio: 1.18; }
+/**
+ * A feature year wants a bigger plate, but the photograph's OWN proportions must
+ * win: `--photo-ar` is set on the frame from the image itself (src/ui/timeline.js),
+ * and a hard aspect-ratio here would override it, cropping tall pictures top and
+ * bottom. Values below are only fallbacks for before the image has loaded.
+ */
+.year--feature .year__frame { aspect-ratio: var(--photo-ar, 1.18); }
 .year--feature .year__grid { gap: clamp(2rem, 6vw, 7rem); }
 
 /* 2022 — the dream. Immersive, blue, larger, but still restrained. */
@@ -750,7 +776,7 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
 }
 
 .year[data-year="2022"] .year__index { color: #FBF6EA; }
-.year[data-year="2022"] .year__frame { aspect-ratio: 1.05; }
+.year[data-year="2022"] .year__frame { aspect-ratio: var(--photo-ar, 1.05); }
 
 /* 2026 — the quiet ending. Light recedes. */
 .year[data-year="2026"] { min-height: 88svh; }
@@ -1312,8 +1338,10 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
   .year--feature .year__index { font-size: clamp(4.4rem, 24vw, 8rem); }
 
   .year__tagline { max-width: none; }
-  .year--feature .year__frame { aspect-ratio: 1.2; }
-  .year__frame { aspect-ratio: 1.25; }
+  /* on phones the photograph's own proportions still win — only the fallback
+     used before it has loaded gets a taller mobile-friendly value */
+  .year--feature .year__frame { aspect-ratio: var(--photo-ar, 1.2); }
+  .year__frame { aspect-ratio: var(--photo-ar, 1.25); max-height: 74svh; }
   .year__frame::after { opacity: 0.75; }
 
   .dossier__visual { height: 52svh; }

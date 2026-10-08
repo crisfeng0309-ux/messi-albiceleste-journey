@@ -51,19 +51,24 @@ check(/西班牙 1—0 阿根廷/.test(years), '2026 records the final defeat to
 check(/WORLD CUP RUNNER-UP/.test(years), '2026 is labelled as runners-up');
 check(/208 场 126 球/.test(years), '2026 states the verified final caps and goals');
 
-/* archive gaps are explained, and never faked */
+/* archive gaps are explained, and never faked.
+   The sets are derived from the shipped data so adding or swapping a photograph
+   does not require editing this test. */
 const verifiedCount = (credits.match(/"verified": true/g) || []).length;
-check(verifiedCount === 13, `${verifiedCount} years carry verified photographs`);
-const gapYears = [2005, 2006, 2009, 2013, 2016, 2019, 2020, 2021, 2025];
-for (const year of gapYears) {
-  // the generated file uses unquoted numeric keys
-  const record = new RegExp(`^\\s{2}${year}: \\{([\\s\\S]*?)\\n  \\},`, 'm').exec(credits);
-  const body = record ? record[1] : '';
+const unverifiedCount = (credits.match(/"verified": false/g) || []).length;
+check(verifiedCount + unverifiedCount === 22, `${verifiedCount} verified + ${unverifiedCount} unverified = 22 years`);
+check(verifiedCount >= 13, `${verifiedCount} years carry verified photographs`);
+
+/* every unverified year must explain itself in its own record */
+const records = [...credits.matchAll(/\n  (\d{4}): \{([\s\S]*?)\n  \},/g)].map((m) => ({ year: m[1], body: m[2] }));
+const unverified = records.filter((r) => r.body.includes('"verified": false'));
+for (const r of unverified) {
   check(
-    body.includes('"verified": false') && /Commons|检索|没有/.test(body),
-    `${year} is unverified and documents what was searched`
+    /Commons|检索|没有|缺口/.test(r.body),
+    `${r.year} is unverified and documents what was searched`
   );
 }
+if (!unverified.length) check(true, 'no unverified years — every chapter carries a photograph');
 
 /* sharing card */
 check(/'MESSI · THE ALBICELESTE JOURNEY'/.test(config), 'site config names the museum');

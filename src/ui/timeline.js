@@ -101,19 +101,42 @@ export function renderTimeline(root, years, { onOpen }) {
    *
    * The museum is meant to be leafed through like a book of plates, so a portrait
    * frame is a tall plate and a landscape frame is a wide one — one uniform card
-   * size for all 22 years would flatten exactly the thing the design is about
-   * (a boy becoming a man, seen through differently shaped pictures).
+   * size for all 22 years would flatten exactly the thing the design is about.
+   *
+   * A frame that would be taller than the viewport is widened instead of cropped,
+   * because cutting off a person (or a score line printed across the foot of the
+   * picture) is worse than an unusually wide plate.
    */
   root.querySelectorAll('.year__frame img').forEach((img) => {
     const adopt = () => {
       if (!img.naturalWidth || !img.naturalHeight) return;
-      const ratio = img.naturalWidth / img.naturalHeight;
       const frame = img.closest('.year__frame');
       if (!frame) return;
-      // keep an extreme panorama/column from wrecking the page rhythm
-      const clamped = Math.min(1.9, Math.max(0.58, ratio));
+      const ratio = img.naturalWidth / img.naturalHeight;
+
+      // Keep extreme panoramas and columns inside a sane range. The portrait
+      // floor is deliberately close to 1 so a tall plate is not cropped
+      // sideways — photos that carry their own captions or score lines must be
+      // shown whole.
+      const clamped = Math.min(1.9, Math.max(0.72, ratio));
+      const columnWidth = frame.parentElement ? frame.parentElement.clientWidth : frame.clientWidth;
+      const maxHeight = window.innerHeight * 0.86;
+
+      let width = '100%';
+      let grew = false;
+      if (columnWidth > 0 && columnWidth / clamped > maxHeight) {
+        // would overflow vertically: grow the plate sideways so nothing is cut
+        width = `${Math.round(maxHeight * clamped)}px`;
+        grew = true;
+      }
+
       frame.style.setProperty('--photo-ar', String(clamped));
-      frame.dataset.orientation = ratio < 0.95 ? 'portrait' : ratio > 1.5 ? 'panorama' : 'landscape';
+      frame.style.width = width;
+      frame.dataset.orientation =
+        ratio < 0.95 ? (ratio < 0.8 ? 'poster' : 'portrait') : ratio > 1.5 ? 'panorama' : 'landscape';
+      // a growable grid track lets a widened plate keep its proportions
+      const figure = frame.closest('.year__figure');
+      if (figure) figure.style.gridColumn = grew ? '1 / -1' : '';
     };
     if (img.complete) adopt();
     else img.addEventListener('load', adopt, { once: true });
