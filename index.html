@@ -53,11 +53,15 @@
       <span>纵有疾风起</span>
       <span>人生不言弃</span>
     </p>
-    <button class="enter" id="enter" type="button">
-      <span class="enter__label">ENTER THE JOURNEY</span>
-      <span class="enter__rule" aria-hidden="true"></span>
-    </button>
-    <p class="hero__enter-hint">点击这里开始参观 · 往下滚一年一年地看</p>
+    <!-- The button is the real control, but the line under it says "click here", so
+         the whole block is made clickable — a label that says click must respond. -->
+    <div class="enter-block">
+      <button class="enter" id="enter" type="button">
+        <span class="enter__label">ENTER THE JOURNEY</span>
+        <span class="enter__rule" aria-hidden="true"></span>
+      </button>
+      <p class="hero__enter-hint">点击这里开始参观 · 往下滚一年一年地看</p>
+    </div>
     <p class="hero__hint">一年一张影像 · 点开照片就是那一年的档案</p>
     <p class="hero__exhibit">
       <a href="#gallery">看完 2026 之后 · 世界杯特别展厅<span aria-hidden="true">↓</span></a>

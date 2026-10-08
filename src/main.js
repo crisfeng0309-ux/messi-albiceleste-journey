@@ -169,6 +169,29 @@ function enter() {
 
 $('#enter')?.addEventListener('click', enter);
 
+/**
+ * The instruction under the button says "click here", so the whole block responds:
+ * clicking the line enters the journey exactly as the button does. Without this a
+ * label that promises a click does nothing, which reads as a broken page.
+ *
+ * The button keeps its own listener, and clicks that land on it are not handled
+ * twice (the guard below ignores them).
+ */
+const enterBlock = $('.enter-block');
+enterBlock?.addEventListener('click', (ev) => {
+  if (ev.target.closest('#enter')) return; // the button already handles it
+  enter();
+});
+/* and it is reachable by keyboard, announced as a control */
+enterBlock?.setAttribute('role', 'button');
+enterBlock?.setAttribute('tabindex', '0');
+enterBlock?.addEventListener('keydown', (ev) => {
+  if (ev.key === 'Enter' || ev.key === ' ') {
+    ev.preventDefault();
+    enter();
+  }
+});
+
 /* Keyboard: press Enter anywhere on the hero, or ↓ to begin. */
 window.addEventListener('keydown', (ev) => {
   if (journey.hidden && (ev.key === 'Enter' || ev.key === 'ArrowDown' || ev.key === ' ')) {

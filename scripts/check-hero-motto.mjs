@@ -89,6 +89,30 @@ check(
   'the motion is dropped for readers who ask for reduced motion'
 );
 
+/* ---- the cover must never clip its own call to action ---------------------
+   `overflow: hidden` on the cover clipped the ENTER button on shorter laptop
+   screens while looking perfectly fine, so the button was simply invisible and
+   unreachable. That failure is silent, which is why it needs a test. */
+const heroRule = /(^|\})\s*\.hero\s*\{([\s\S]*?)\}/.exec(cssNoComments);
+check(Boolean(heroRule), 'the cover has its own rule');
+if (heroRule) {
+  check(!/overflow\s*:\s*(hidden|clip)/.test(heroRule[2]), 'the cover does not clip its contents (no overflow: hidden)');
+  check(/min-height/.test(heroRule[2]), 'the cover sizes with min-height so it can grow past the viewport');
+  check(/justify-content:\s*center/.test(heroRule[2]), 'its content stays vertically centred when there is room');
+}
+/* the oversized artwork is clipped by its own container instead */
+const mediaRule = /(^|\})\s*\.hero__media\s*\{([\s\S]*?)\}/.exec(cssNoComments);
+check(Boolean(mediaRule) && /overflow\s*:\s*hidden/.test(mediaRule[2]), 'the decorative media clips itself');
+
+/* and the whole button block must be reachable by pointer and keyboard */
+check(/class="enter-block"/.test(html), 'the button and its instruction share a clickable block');
+const mainJs = readFileSync(path.join(ROOT, 'src', 'main.js'), 'utf8');
+check(/enterBlock[\s\S]{0,400}enter\(\)/.test(mainJs), 'clicking the instruction enters the journey');
+check(/closest\('#enter'\)/.test(mainJs), 'a click on the button itself is not handled twice');
+check(/setAttribute\('role', 'button'\)/.test(mainJs), 'the block is announced as a control');
+check(/setAttribute\('tabindex', '0'\)/.test(mainJs), 'the block is reachable by keyboard');
+check(/cursor:\s*pointer/.test(cssNoComments), 'the block shows a pointer cursor');
+
 /* ---- the intended size ratio ---------------------------------------------- */
 /** resolve a clamp(min, <vw>, max) at a given viewport width */
 function resolveClamp(decl, vw) {

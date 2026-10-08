@@ -108,17 +108,28 @@ body::before {
    HERO
    ========================================================================== */
 
+/**
+ * The cover fills the viewport, but it must never hide its own call to action.
+ * `overflow: hidden` here used to CLIP the button on shorter laptop screens — the
+ * cover looks fine, so the fault is invisible. The cover now grows past the
+ * viewport when the content needs it: a taller cover is a small cost, a hidden
+ * ENTER button is a dead end.
+ *
+ * The decorative layers (photograph, veil, glow) are oversized by design and are
+ * clipped by their own container instead.
+ */
 .hero {
   position: relative;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: hidden;
-  padding: clamp(3rem, 8vh, 8rem) clamp(1.5rem, 6vw, 6rem);
+  padding: clamp(2.4rem, 6vh, 6rem) clamp(1.5rem, 6vw, 6rem);
 }
 
-.hero__media { position: absolute; inset: 0; z-index: 0; }
+/* the decorative layers are oversized by design — they clip themselves, so the
+   cover is free to grow and never hides its own button */
+.hero__media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 
 .hero__media img {
   width: 100%;
@@ -206,11 +217,11 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
   letter-spacing: 0.42em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-top: clamp(1rem, 2.4vh, 1.8rem);
+  margin-top: clamp(0.85rem, 1.8vh, 1.4rem);
 }
 
 .hero__line {
-  margin-top: clamp(1.6rem, 3.4vh, 2.6rem);
+  margin-top: clamp(1.2rem, 2.4vh, 1.9rem);
   font-family: var(--font-display);
   font-size: clamp(1.05rem, 2.1vw, 1.7rem);
   font-style: italic;
@@ -246,7 +257,7 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
   /* the tracking adds a trailing gap on the last glyph of each line */
   text-indent: 0.24em;
   color: #EDE6D6;
-  margin-top: clamp(1.5rem, 3.4vh, 2.5rem);
+  margin-top: clamp(1.1rem, 2.4vh, 1.8rem);
   text-wrap: balance;
   display: flex;
   flex-direction: column;
@@ -261,7 +272,7 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
 
 /* the doorway into the 2006—2026 World Cup exhibition */
 .hero__exhibit {
-  margin-top: clamp(1.4rem, 3.4vh, 2.2rem);
+  margin-top: clamp(1.1rem, 2.4vh, 1.7rem);
   font-family: var(--font-serif-cjk);
   font-size: clamp(0.82rem, 1.05vw, 0.94rem);
   letter-spacing: 0.12em;
@@ -327,12 +338,28 @@ body.is-ready .hero__enter-hint {
   body.is-ready .hero__enter-hint { animation: none; }
 }
 
+/* The button and its instruction are one clickable block: the line says "click
+   here", so clicking the line must work too. The button keeps its own behaviour,
+   and the block carries the pointer so the whole area reads as a control. */
+.enter-block {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+  /* negative margins grow the hit area without moving the type */
+  margin: -0.6rem 0 -0.4rem -0.6rem;
+  padding: 0.6rem 0.6rem 0.4rem;
+}
+
+.enter-block .enter { margin-top: 0; }
+.enter-block .hero__enter-hint { margin-top: 0.5rem; }
+
 .enter {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 1.1rem;
-  margin-top: clamp(2.4rem, 6vh, 4.2rem);
+  margin-top: clamp(1.7rem, 4vh, 2.9rem);
   padding: 0.85rem 0;
   font-family: var(--font-mono);
   font-size: clamp(0.68rem, 0.92vw, 0.8rem);
