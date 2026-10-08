@@ -96,6 +96,103 @@ scripts/                构建、下载、校验与测试脚本
 
 按照「不能因为像那个年龄就用」的规则，这些年份**不放任何照片**，而是显示一块设计过的「档案缺口」铭牌：年份、当年的关键比赛、以及我们检索过什么。宁可在博物馆里留一个洞，也不放一张年份错误的照片。
 
+---
+
+## 怎么替换 / 修改某一年的照片
+
+### 推荐：一条命令（自己完成全部同步）
+
+```bash
+node scripts/swap-photo.mjs \
+  --year 2021 \
+  --file "D:\我的图片\messi-2021.jpg" \
+  --date 2021-07-10 \
+  --event "Copa América 2021 · 决赛" \
+  --match "巴西 0—1 阿根廷 · 马拉卡纳" \
+  --source "Wikimedia Commons" \
+  --url "https://commons.wikimedia.org/wiki/File:..." \
+  --author "作者名" \
+  --license "CC BY-SA 4.0" \
+  --focus "50% 32%" \
+  --alt "Lionel Messi, 2021 年美洲杯决赛" \
+  --publish          # 可选：直接发布上线
+```
+
+它会依次完成：
+
+1. 把图片拷进 `assets/photos/<年>.jpg`
+2. 自动缩放（长边 ≤1900px、高度 ≤1500px、渐进式 JPEG）+ 生成 **900px 手机用小图**
+3. 写入来源记录 `source-data/photos.json`（日期 / 赛事 / 对手 / 作者 / 许可 / 取景锚点）
+4. 重新生成 `src/data/photo-credits.js`
+5. 跑数据校验与模块图检查，任何一步不过就**不会**让你发布
+
+**日期是必填的**：路径里没有日期就会被拒绝 —— 这正是这个项目的核心原则。
+
+把某一年的照片撤掉、改回「档案缺口」：
+
+```bash
+node scripts/swap-photo.mjs --year 2021 --gap --note "为什么这一年没有照片"
+```
+
+### 图片和网页背景的关系（重要）
+
+网页是**照片优先**的设计，所以换一张照片会连带改变这些：
+
+| 变化的东西 | 说明 |
+|---|---|
+| **该年份的整块背景** | 页面是深色画布，每张照片本身占据那一屏的主体，照片换了那片区域的观感就换了 |
+| **取景（裁切位置）** | `--focus "50% 30%"` 控制取景锚点。人物不在画面中央时用它，例如 2007 年那张梅西站在最左边，用 `"15% 34%"` 把他锚进画面 |
+| **取景比例** | 图片加载后，代码会按图片真实宽高比自动调整画框比例，所以竖构图不会被硬裁成横条 |
+| **2022 / 2024 等「重点年份」的额外背景** | 2022 有专属的深蓝径向发光背景（代码里按 `data-year` 定义），换成别的年份不会有这个效果 |
+| 全局的暗角、噪点、金色分隔线 | 属于网站设计层，**换照片不会改变**它们 |
+
+### 数据字段一览（在 `src/data/photo-credits.js` 里生成，不要手改）
+
+| 字段 | 页面上显示在哪 |
+|---|---|
+| `photo` / `photoSmall` | 图片本身与手机用小图 |
+| `photoDate` | 照片下方的小字（如 `2014-07-13`），也是「是否已验证」的判据 |
+| `photoEvent` | 照片右下角铭牌（如 `2014 FIFA World Cup · 决赛`） |
+| `photoMatch` | 照片下方说明（对手、比分、球场） |
+| `photoSource` / `photoSourceUrl` | 档案底部「来源」，可点击 |
+| `photoAuthor` / `photoLicense` | 档案底部作者与许可（CC 协议要求署名） |
+| `verified` | 档案底部显示 `photo verified` 还是 `photo unverified` |
+| `photoFocus` | 裁切锚点，不直接显示 |
+| `photoNote` | 档案底部的核对说明（缺口年份写「检索过什么」） |
+
+### 手动方式（不想用命令时）
+
+```bash
+# 1. 替换图片文件本身
+#    assets/photos/<年>.jpg        主图
+#    assets/photos/<年>-900.jpg    手机用小图（可缺省，缺省则该年不带 srcset）
+# 2. 编辑 source-data/photos.json 里那一年的记录
+#    必须有：found: true、photoDate、confidence、pageUrl/thumbUrl 之一
+# 3. 重新生成并校验
+node scripts/make-credits.mjs
+node scripts/validate-data.mjs
+node scripts/check-modules.mjs
+node scripts/build.mjs
+# 4. 预览与发布
+node scripts/serve.mjs 4173
+node scripts/publish-api.mjs --login <github-user>
+```
+
+`make-credits.mjs` 会拒绝自相矛盾的记录（有日期却缺 `found: true`，或有 `found: true` 却缺日期），因为那种记录会**静默地**把照片变成缺口。
+
+### 想改的其实是文字？
+
+- 年份故事、数据、荣誉 → `src/data/years.js`
+- 年份标题（如「梦想成真」THE DREAM）→ 同上，`chapter` / `titleEn`
+- 首页文案、结尾语 → `index.html` + `site.config.js`
+- 整体配色、字体、间距 → `styles.css` 顶部的 CSS 变量
+
+### 如果照片合法性问题
+
+只用你有权使用的图片：自己拍的、明确标注可自由使用的（CC / 公有领域），并**把作者和许可填进 `--author` / `--license`**。档案底部会自动展示署名 —— CC BY / CC BY-SA 都要求署名。
+
+---
+
 ### 已知差异
 
 - 2015 与 2018 年的出场数在不同来源之间分歧较大（12 场 vs 8 场；11 场 vs 5 场），档案中已标注为 `approximate` 并写明两种口径。
