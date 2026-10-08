@@ -46,7 +46,7 @@ export function createArchive({ years, el, panel, onNavigate }) {
           }
           <div class="dossier__plaque">
             <strong>Plate ${d.year}</strong>
-            ${esc(d.photoMatch || d.photoEvent || '')}<br>
+            ${esc(d.photoMatch || d.photoEvent || '')}${d.photoVenue ? `<br>${esc(d.photoVenue)}` : ''}<br>
             ${d.hasPhoto ? `${esc(d.photoDate || '日期待考')} · ${esc(d.photoSource || '公开图片资料')}` : '未收录影像 · 见下方说明'}
           </div>
         </div>
@@ -105,7 +105,7 @@ export function createArchive({ years, el, panel, onNavigate }) {
           <p class="dossier__verify">
             <span class="flag">${verified ? 'photo verified' : 'photo unverified'}</span>
             ${d.hasPhoto
-              ? `照片：${d.photoDate || '日期待考'} · ${esc(d.photoEvent || '')}${d.photoMatch ? ` · ${esc(d.photoMatch)}` : ''}<br>
+              ? `照片：${d.photoDate || '日期待考'} · ${esc(d.photoEvent || '')}${d.photoMatch ? ` · ${esc(d.photoMatch)}` : ''}${d.photoVenue ? ` · ${esc(d.photoVenue)}` : ''}<br>
             来源：${d.photoSourceUrl ? `<a href="${esc(d.photoSourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(d.photoSource || 'source')}</a>` : esc(d.photoSource || '公开图片资料')}${d.photoAuthor ? ` · 摄影 ${esc(d.photoAuthor)}` : ''}${d.photoLicense ? ` · ${esc(d.photoLicense)}` : ''}<br>`
               : `这一年没有收录照片。<br>`}
             ${d.photoNote ? `${esc(d.photoNote)}<br>` : ''}

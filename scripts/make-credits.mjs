@@ -52,6 +52,7 @@ for (const year of Array.from(byYear.keys()).sort((a, b) => a - b)) {
     photoDate: verified ? r.photoDate : '',
     photoEvent: r.photoEvent || '',
     photoMatch: r.photoMatch || '',
+    photoVenue: r.photoVenue || '',
     photoSource: r.source || (r.pageUrl ? 'Wikimedia Commons' : '公开图片资料'),
     photoSourceUrl: r.pageUrl || r.thumbUrl || '',
     photoAuthor: r.author || '',

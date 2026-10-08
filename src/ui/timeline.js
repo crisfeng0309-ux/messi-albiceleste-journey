@@ -85,7 +85,7 @@ export function renderTimeline(root, years, { onOpen }) {
           </button>
           <figcaption class="year__caption">
             <strong>${esc(d.photoDate || '无可核实影像')}</strong>
-            <span>${esc(d.photoMatch || '')}${d.photoMatch ? ' · ' : ''}${captionSource}</span>
+            <span>${esc(d.photoMatch || '')}${d.photoMatch && d.photoVenue ? ' · ' : ''}${esc(d.photoVenue || '')}${d.photoMatch ? ' · ' : ''}${captionSource}</span>
           </figcaption>
         </figure>
       </div>
