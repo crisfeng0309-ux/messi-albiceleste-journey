@@ -21,18 +21,25 @@ const targets = ['src/data/photo-credits.js', 'src/ui/timeline.js', 'src/data/ye
  * that keeps this script honest instead of flagging the intended difference forever.
  */
 function explainIndexDiff(local, live) {
-  const placeholder = '<!-- EXHIBIT:INLINE -->';
-  if (!local.includes(placeholder)) return { ok: false, note: 'workspace index.html lost its EXHIBIT:INLINE placeholder' };
-  const rebuilt = local.replace(placeholder, local.length ? '' : '');
-  void rebuilt;
+  const placeholders = ['<!-- EXHIBIT:INLINE -->', '<!-- GUIDE:INLINE -->'];
+  const missingPlaceholder = placeholders.find((p) => !local.includes(p));
+  if (missingPlaceholder) {
+    return { ok: false, note: `workspace index.html lost its ${missingPlaceholder} placeholder` };
+  }
   const carriesHall = /id="gallery"/.test(live) && /id="wc2022"/.test(live) && /\.ex-axis/.test(live);
+  const carriesGuide = /id="how-to"/.test(live) && /\.ex-guide/.test(live);
   if (!carriesHall) return { ok: false, note: 'live page does not carry the spliced hall' };
+  if (!carriesGuide) return { ok: false, note: 'live page does not carry the spliced visitor guide' };
   /* every line of the source must survive verbatim in the live page except the
-     placeholder, which the hall replaces */
-  const sourceLines = local.split('\n').filter((l) => l.trim() && !l.includes('EXHIBIT:INLINE'));
+     placeholders, which the guide and the hall replace */
+  const sourceLines = local
+    .split('\n')
+    .filter((l) => l.trim() && !placeholders.some((p) => l.includes(p)));
   const missing = sourceLines.filter((l) => !live.includes(l));
-  if (missing.length) return { ok: false, note: `${missing.length} source line(s) absent from the live page` };
-  return { ok: true, note: 'live page = workspace source + spliced hall + inlined stylesheet' };
+  if (missing.length) {
+    return { ok: false, note: `${missing.length} source line(s) absent from the live page: ${missing[0].trim().slice(0, 60)}` };
+  }
+  return { ok: true, note: 'live page = workspace source + spliced guide and hall + inlined stylesheet' };
 }
 
 for (const rel of targets) {
