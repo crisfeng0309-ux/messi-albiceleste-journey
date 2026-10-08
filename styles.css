@@ -166,9 +166,8 @@ body.is-ready .hero__sub        { opacity: 1; transform: none; transition-delay:
 body.is-ready .hero__line       { opacity: 1; transform: none; transition-delay: 1.15s; }
 body.is-ready .hero__line--zh   { transition-delay: 1.3s; }
 body.is-ready .hero__motto      { opacity: 1; transform: none; transition-delay: 1.45s; }
-body.is-ready .hero__exhibit    { opacity: 1; transform: none; }
-body.is-ready .enter            { opacity: 1; transform: none; transition-delay: 1.5s; }
-body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay: 1.7s; }
+body.is-ready .hero__exhibit    { opacity: 1; transform: none; transition-delay: 2.15s; }
+body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay: 1.95s; }
 
 .hero__eyebrow {
   font-family: var(--font-mono);
@@ -296,6 +295,37 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
 }
 
 .hero__exhibit a:hover span { transform: translateX(4px); }
+
+/* The button says ENTER THE JOURNEY in English and is set like a label rather than
+   a control, so a first-time visitor cannot tell it is clickable. This line says
+   plainly what to do, and breathes very slightly so the eye catches it — motion
+   used as an invitation, not decoration. */
+.hero__enter-hint {
+  font-family: var(--font-serif-cjk);
+  font-size: clamp(0.8rem, 1.05vw, 0.92rem);
+  letter-spacing: 0.14em;
+  color: rgba(237, 230, 214, 0.58);
+  margin-top: 0.85rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1.4s var(--ease), transform 1.4s var(--ease);
+}
+
+body.is-ready .hero__enter-hint {
+  opacity: 1;
+  transform: none;
+  transition-delay: 1.75s;
+  animation: enter-breathe 3.6s ease-in-out 3.4s infinite;
+}
+
+@keyframes enter-breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.is-ready .hero__enter-hint { animation: none; }
+}
 
 .enter {
   position: relative;

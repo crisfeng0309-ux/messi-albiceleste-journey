@@ -36,6 +36,16 @@ check(lines[0] === '纵有疾风起' && lines[1] === '人生不言弃', 'the two
 const order = ['hero__line--zh', 'hero__motto', 'id="enter"'].map((n) => html.indexOf(n));
 check(order[0] < order[1] && order[1] < order[2], 'it sits below the tagline and above ENTER THE JOURNEY');
 
+/* ---- the way in: a first-time visitor must be told the button is clickable ---- */
+console.log('\n— the entrance is explained —');
+const enterBtnAt = html.indexOf('id="enter"');
+const enterHint = /<p class="hero__enter-hint">([\s\S]*?)<\/p>/.exec(html);
+check(Boolean(enterHint), 'the cover carries a click instruction under the button');
+const hintAt = enterHint ? html.indexOf('hero__enter-hint') : -1;
+check(hintAt > enterBtnAt, 'the instruction sits directly under ENTER THE JOURNEY');
+check(enterHint ? /点击/.test(enterHint[1]) : false, 'it tells the visitor to click');
+check(enterHint ? /参观|开始|游览/.test(enterHint[1]) : false, 'it says what clicking will do');
+
 /* ---- nothing else in the cover may have changed ---------------------------- */
 const heroHtml = /<header class="hero"[\s\S]*?<\/header>/.exec(html)[0];
 for (const required of [
@@ -67,6 +77,17 @@ check(/align-items:\s*flex-start/.test(body), 'left aligned');
 check(/flex-direction:\s*column/.test(body), 'stacked as two lines');
 check(/--font-serif-cjk:/.test(cssNoComments), 'the Chinese serif variable is declared');
 check(/body\.is-ready \.hero__motto/.test(cssNoComments), 'it takes part in the cover reveal');
+
+/* the entrance instruction, once the stylesheet has been parsed */
+const hintRule = /(^|\})\s*\.hero__enter-hint\s*\{([\s\S]*?)\}/.exec(cssNoComments);
+check(Boolean(hintRule), 'the click instruction is styled, not raw text');
+check(/--font-serif-cjk/.test(hintRule ? hintRule[2] : ''), 'it is set in the Chinese serif used across the cover');
+check(/animation:\s*enter-breathe/.test(cssNoComments), 'it breathes gently so the eye catches it');
+check(/@keyframes enter-breathe/.test(cssNoComments), 'the breathing keyframes are defined');
+check(
+  /prefers-reduced-motion[\s\S]{0,160}enter-hint[\s\S]{0,40}animation:\s*none/.test(cssNoComments),
+  'the motion is dropped for readers who ask for reduced motion'
+);
 
 /* ---- the intended size ratio ---------------------------------------------- */
 /** resolve a clamp(min, <vw>, max) at a given viewport width */
