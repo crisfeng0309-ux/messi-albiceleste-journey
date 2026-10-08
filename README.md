@@ -118,14 +118,20 @@ scripts/                构建、下载、校验与测试脚本
 
 ## 特别展厅：世界杯二十年（2006 — 2026）
 
-主时间轴是**每一年**；`exhibit.html` 是另一件东西 —— 一个只讲**六届世界杯**的最终展厅，作为整段旅程的情绪收束。
+主时间轴是**每一年**；特别展厅只讲**六届世界杯**，作为整段旅程的情绪收束。
+
+**它是时间轴的最后一面墙** —— 用户滚完 2026 年、读完 `Gracias, Leo.` 之后，继续往下就是展厅：六个章节，最后停在「纵有疾风起，人生不言弃。」
 
 | | |
 |---|---|
-| 页面 | `exhibit.html` ＋ `exhibit.css`（独立样式表，**不影响主时间轴**） |
-| 照片 | `assets/photos/wc/2006.jpg` … `2026.jpg`，六张，独立目录，与时间轴上的照片互不干扰 |
+| 嵌入位置 | `index.html` 的 `<!-- EXHIBIT:INLINE -->` 占位处，由构建脚本拼接 |
+| 独立页面 | `exhibit.html`（同一份内容，可直接分享）—— https://crisfeng0309-ux.github.io/messi-albiceleste-journey/exhibit.html |
+| 照片 | `assets/photos/wc/2006.jpg` … `2026.jpg`，独立目录，与时间轴上的照片互不干扰 |
 | 清单 | `source-data/worldcup-exhibition.json` —— 年份与文件的对应关系显式写死 |
+| 样式 | `exhibit.css`；构建时**内联进首页**，所以走到展厅那一刻样式已经在了 |
 | 校验 | `node scripts/check-exhibit.mjs`（已并入 `verify.mjs`） |
+
+**内容只写一次**：六个章节写在 `exhibit.html` 的 `EXHIBIT:START` / `EXHIBIT:END` 标记之间，`scripts/build.mjs` 把它拼进首页，同时生成去掉标记、内联样式的独立页面。改一处，两边同步。
 
 **六个章节**：2006 少年初登 → 2010 成长中的十号 → 2014 巅峰与遗憾 → 2018 低谷之后 → 2022 圆梦（唯一使用金色的章节）→ 2026 最后一舞。
 

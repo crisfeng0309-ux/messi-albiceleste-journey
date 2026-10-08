@@ -30,7 +30,10 @@
 </header>
 
 <!-- ===================== THE SIX CHAPTERS ===================== -->
-<main class="ex-axis">
+<!-- EXHIBIT:START — this block is spliced into the end of the main timeline by
+     scripts/build.mjs, so the six chapters are authored exactly once. -->
+<div class="exhibit" id="gallery">
+  <div class="ex-axis">
 
   <!-- 2006 -->
   <section class="ex" id="wc2006" data-year="2006">
@@ -116,7 +119,7 @@
     </div>
   </section>
 
-</main>
+  </div>
 
 <!-- ===================== THE LAST WALL ===================== -->
 <section class="ex-end">
@@ -137,10 +140,12 @@
     <div class="ex-end__rule" aria-hidden="true"></div>
 
     <p class="ex-end__back">
-      <a href="index.html">返回时间轴 · 2005 — 2026</a>
+      <a href="#epilogue">返回 2026 · THE ALBICELESTE JOURNEY</a>
     </p>
   </div>
 </section>
+</div>
+<!-- EXHIBIT:END -->
 
 </body>
 </html>

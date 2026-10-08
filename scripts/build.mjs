@@ -18,8 +18,8 @@ const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 
 const FILES = [
-  'index.html',
-  'exhibit.html', // the 2006—2026 World Cup exhibition ("the last hall")
+  // index.html and exhibit.html are written below, because the exhibition has to
+  // be spliced into the timeline's end (and its stylesheet inlined) first.
   'exhibit.css',
   '404.html',
   'self-test.html', // the browser self-check ships with the site so a deployment can be verified in place
@@ -40,6 +40,44 @@ for (const f of FILES) {
 for (const d of DIRS) {
   await cp(path.join(ROOT, d), path.join(DIST, d), { recursive: true });
 }
+
+/* ------------------------------------------------------------------ splice --
+ * The World Cup exhibition lives in exhibit.html between two markers so it can be
+ * read as a standalone page AND appended to the timeline, without maintaining two
+ * copies. The home page inlines exhibit.css so the hall carries its own styling
+ * the moment it is reached.
+ */
+const exhibitSrc = await readFile(path.join(ROOT, 'exhibit.html'), 'utf8');
+const startMark = '<!-- EXHIBIT:START';
+const endMark = '<!-- EXHIBIT:END -->';
+const startAt = exhibitSrc.indexOf(startMark);
+const endAt = exhibitSrc.indexOf(endMark);
+if (startAt < 0 || endAt < 0) {
+  console.error('build: exhibit.html is missing its EXHIBIT:START / EXHIBIT:END markers');
+  process.exit(1);
+}
+const exhibitBlock = exhibitSrc.slice(exhibitSrc.indexOf('-->', startAt) + 3, endAt).trim();
+const exhibitCss = await readFile(path.join(ROOT, 'exhibit.css'), 'utf8');
+
+/* the standalone page: the authoring markers and the linked stylesheet removed
+   (the CSS is inlined there too, so the page is self-contained) */
+const standalone = exhibitSrc
+  .replace(/<!-- EXHIBIT:START[\s\S]*?-->/, '')
+  .replace('<!-- EXHIBIT:END -->', '')
+  .replace(/^.*?<link rel="stylesheet" href="exhibit\.css" \/>\n/m, '')
+  .replace('</head>', `  <style>\n${exhibitCss}\n  </style>\n</head>`);
+await writeFile(path.join(DIST, 'exhibit.html'), standalone);
+
+/* the timeline: the same block appended before </main>, plus the inline styles */
+let home = await readFile(path.join(ROOT, 'index.html'), 'utf8');
+if (!home.includes('<!-- EXHIBIT:INLINE -->')) {
+  console.error('build: index.html is missing its <!-- EXHIBIT:INLINE --> placeholder');
+  process.exit(1);
+}
+home = home
+  .replace('<!-- EXHIBIT:INLINE -->', exhibitBlock)
+  .replace('</head>', `  <style>\n${exhibitCss}\n  </style>\n</head>`);
+await writeFile(path.join(DIST, 'index.html'), home);
 
 async function walk(dir) {
   const out = [];
