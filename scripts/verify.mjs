@@ -43,6 +43,7 @@ run('data + assets', path.join(ROOT, 'scripts', 'validate-data.mjs'));
 run('timeline interactions', path.join(ROOT, 'scripts', 'test-dom.mjs'));
 run('exhibition (2006—2026)', path.join(ROOT, 'scripts', 'check-exhibit.mjs'));
 run('cover dedication', path.join(ROOT, 'scripts', 'check-hero-motto.mjs'));
+run('signature', path.join(ROOT, 'scripts', 'check-signature.mjs'));
 run('css structure', path.join(ROOT, 'scripts', 'check-css.mjs'));
 
 /* Start a throwaway preview server for the HTTP passes.
