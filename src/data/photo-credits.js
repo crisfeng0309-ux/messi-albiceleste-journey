@@ -12,6 +12,7 @@ export const PHOTO_CREDITS = {
   2005: {
     "photo": "assets/photos/2005.jpg",
     "photoSmall": "assets/photos/2005-900.jpg",
+    "photoWidth": 1078,
     "photoDate": "2005-08-17",
     "photoEvent": "友谊赛 · 布达佩斯",
     "photoMatch": "匈牙利 1—2 阿根廷 · 首秀",
@@ -27,6 +28,7 @@ export const PHOTO_CREDITS = {
   2006: {
     "photo": "assets/photos/2006.jpg",
     "photoSmall": "assets/photos/2006-900.jpg",
+    "photoWidth": 1139,
     "photoDate": "2006-06-16",
     "photoEvent": "2006 FIFA World Cup · 小组赛",
     "photoMatch": "阿根廷 6—0 塞黑 · 盖尔森基兴",
@@ -42,6 +44,7 @@ export const PHOTO_CREDITS = {
   2007: {
     "photo": "assets/photos/2007.jpg",
     "photoSmall": "assets/photos/2007-900.jpg",
+    "photoWidth": 1900,
     "photoDate": "2007-07-08",
     "photoEvent": "Copa América 2007 · 委内瑞拉",
     "photoMatch": "阿根廷 vs 秘鲁 · 1/4 决赛",
@@ -57,6 +60,7 @@ export const PHOTO_CREDITS = {
   2008: {
     "photo": "assets/photos/2008.jpg",
     "photoSmall": "assets/photos/2008-900.jpg",
+    "photoWidth": 1900,
     "photoDate": "2008-08-19",
     "photoEvent": "北京 2008 奥运会男子足球 · 半决赛",
     "photoMatch": "阿根廷国奥队 vs 巴西国奥队",
@@ -72,6 +76,7 @@ export const PHOTO_CREDITS = {
   2009: {
     "photo": "assets/photos/2009.jpg",
     "photoSmall": "",
+    "photoWidth": 552,
     "photoDate": "2009-09-05",
     "photoEvent": "2010 世界杯南美区预选赛",
     "photoMatch": "阿根廷 1—3 巴西",
@@ -87,6 +92,7 @@ export const PHOTO_CREDITS = {
   2010: {
     "photo": "assets/photos/2010.jpg",
     "photoSmall": "assets/photos/2010-900.jpg",
+    "photoWidth": 1024,
     "photoDate": "2010-07-03",
     "photoEvent": "2010 FIFA World Cup · 1/4 决赛",
     "photoMatch": "阿根廷 vs 德国 · 开普敦",
@@ -102,6 +108,7 @@ export const PHOTO_CREDITS = {
   2011: {
     "photo": "assets/photos/2011.jpg",
     "photoSmall": "assets/photos/2011-900.jpg",
+    "photoWidth": 1900,
     "photoDate": "2011-07-01",
     "photoEvent": "Copa América 2011 · 揭幕战",
     "photoMatch": "阿根廷 vs 玻利维亚 · 拉普拉塔",
@@ -117,6 +124,7 @@ export const PHOTO_CREDITS = {
   2012: {
     "photo": "assets/photos/2012.jpg",
     "photoSmall": "assets/photos/2012-900.jpg",
+    "photoWidth": 1900,
     "photoDate": "2012-02-29",
     "photoEvent": "国际友谊赛 · 伯尔尼",
     "photoMatch": "瑞士 1—3 阿根廷（帽子戏法）",
@@ -132,6 +140,7 @@ export const PHOTO_CREDITS = {
   2013: {
     "photo": "assets/photos/2013.jpg",
     "photoSmall": "",
+    "photoWidth": 594,
     "photoDate": "2013-03-22",
     "photoEvent": "2014 世界杯南美区预选赛",
     "photoMatch": "阿根廷 3—0 委内瑞拉",
@@ -147,6 +156,7 @@ export const PHOTO_CREDITS = {
   2014: {
     "photo": "assets/photos/2014.jpg",
     "photoSmall": "assets/photos/2014-900.jpg",
+    "photoWidth": 1900,
     "photoDate": "2014-07-13",
     "photoEvent": "2014 FIFA World Cup · 决赛",
     "photoMatch": "德国 1—0 阿根廷 · 马拉卡纳",
@@ -162,6 +172,7 @@ export const PHOTO_CREDITS = {
   2015: {
     "photo": "assets/photos/2015.jpg",
     "photoSmall": "assets/photos/2015-900.jpg",
+    "photoWidth": 1900,
     "photoDate": "2015-06-30",
     "photoEvent": "Copa América 2015 · 智利",
     "photoMatch": "阿根廷 6—1 巴拉圭 · 半决赛",
@@ -177,6 +188,7 @@ export const PHOTO_CREDITS = {
   2016: {
     "photo": "assets/photos/2016.jpg",
     "photoSmall": "",
+    "photoWidth": 594,
     "photoDate": "2016-06-21",
     "photoEvent": "百年美洲杯 · 半决赛",
     "photoMatch": "美国 0—4 阿根廷",
@@ -192,6 +204,7 @@ export const PHOTO_CREDITS = {
   2017: {
     "photo": "assets/photos/2017.jpg",
     "photoSmall": "assets/photos/2017-900.jpg",
+    "photoWidth": 1000,
     "photoDate": "2017-10-11",
     "photoEvent": "2018 世界杯南美区预选赛 · 最后一轮",
     "photoMatch": "厄瓜多尔 1—3 阿根廷（梅西帽子戏法）",
@@ -207,6 +220,7 @@ export const PHOTO_CREDITS = {
   2018: {
     "photo": "assets/photos/2018.jpg",
     "photoSmall": "assets/photos/2018-900.jpg",
+    "photoWidth": 1400,
     "photoDate": "2018-06-26",
     "photoEvent": "2018 FIFA World Cup · 小组赛",
     "photoMatch": "尼日利亚 1—2 阿根廷 · 圣彼得堡",
@@ -222,6 +236,7 @@ export const PHOTO_CREDITS = {
   2019: {
     "photo": "assets/photos/2019.jpg",
     "photoSmall": "",
+    "photoWidth": 594,
     "photoDate": "2019-07-02",
     "photoEvent": "2019 美洲杯 · 半决赛",
     "photoMatch": "巴西 2—0 阿根廷",
@@ -237,6 +252,7 @@ export const PHOTO_CREDITS = {
   2020: {
     "photo": "assets/photos/2020.jpg",
     "photoSmall": "",
+    "photoWidth": 750,
     "photoDate": "2020-10-08",
     "photoEvent": "2022 世界杯南美区预选赛",
     "photoMatch": "阿根廷 1—0 厄瓜多尔（梅西点球）",
@@ -252,6 +268,7 @@ export const PHOTO_CREDITS = {
   2021: {
     "photo": "assets/photos/2021.jpg",
     "photoSmall": "assets/photos/2021-900.jpg",
+    "photoWidth": 1103,
     "photoDate": "2021-07-10",
     "photoEvent": "2021 美洲杯 · 决赛",
     "photoMatch": "巴西 0—1 阿根廷（夺冠）",
@@ -267,6 +284,7 @@ export const PHOTO_CREDITS = {
   2022: {
     "photo": "assets/photos/2022.jpg",
     "photoSmall": "assets/photos/2022-900.jpg",
+    "photoWidth": 1900,
     "photoDate": "2022-12-18",
     "photoEvent": "2022 FIFA World Cup · 决赛",
     "photoMatch": "阿根廷 3—3 法国（点球 4—2）· 卢赛尔",
@@ -282,6 +300,7 @@ export const PHOTO_CREDITS = {
   2023: {
     "photo": "assets/photos/2023.jpg",
     "photoSmall": "",
+    "photoWidth": 844,
     "photoDate": "2023-03-30",
     "photoEvent": "国际友谊赛 · 圣地亚哥-德尔埃斯特罗",
     "photoMatch": "阿根廷 vs 库拉索 · 2023 年 3 月",
@@ -297,6 +316,7 @@ export const PHOTO_CREDITS = {
   2024: {
     "photo": "assets/photos/2024.jpg",
     "photoSmall": "assets/photos/2024-900.jpg",
+    "photoWidth": 1280,
     "photoDate": "2024-07-04",
     "photoEvent": "Copa América USA 2024 · 1/4 决赛",
     "photoMatch": "阿根廷 1—1 厄瓜多尔（点球胜）",
@@ -312,6 +332,7 @@ export const PHOTO_CREDITS = {
   2025: {
     "photo": "assets/photos/2025.jpg",
     "photoSmall": "",
+    "photoWidth": 0,
     "photoDate": "",
     "photoEvent": "2026 世界杯预选赛",
     "photoMatch": "阿根廷 4—1 巴西 · 布宜诺斯艾利斯（2025-03-25）",
@@ -327,6 +348,7 @@ export const PHOTO_CREDITS = {
   2026: {
     "photo": "assets/photos/2026.jpg",
     "photoSmall": "assets/photos/2026-900.jpg",
+    "photoWidth": 1900,
     "photoDate": "2026-07-19",
     "photoEvent": "2026 FIFA World Cup · 决赛",
     "photoMatch": "西班牙 1—0 阿根廷（加时）· 新泽西",

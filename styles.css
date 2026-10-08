@@ -576,14 +576,6 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
 
 .year__frame[data-orientation='portrait'] img { object-position: 50% 26%; }
 
-/**
- * A photograph smaller than its column is shown at the size it can support and
- * centred, rather than stretched into a blur. The empty space reads as a mat
- * around a print.
- */
-.year__figure { display: flex; flex-direction: column; }
-.year__frame[data-scale='native'] { margin-inline: auto; }
-
 .year.is-seen .year__frame img { transform: scale(1); }
 .year__frame:hover img { transform: scale(1.02); filter: saturate(1) contrast(1.05); }
 

@@ -32,6 +32,13 @@ export function renderTimeline(root, years, { onOpen }) {
 
     const photoCount = d.photoCount || 1;
     const captionSource = d.photoSource ? esc(d.photoSource) : '公开图片资料';
+    /**
+     * A photograph whose source file is small enough to be shown at its own size
+     * gets a shorter caption: the plate already names the event, and a long credit
+     * line would wrap into three rows and shrink the picture itself. The full
+     * credit is always one click away in the dossier.
+     */
+    const isSmall = Number(d.photoWidth || 0) > 0 && Number(d.photoWidth) < 800;
 
     /* Years with no verifiable free photograph get a designed plate that names
        the gap. The museum shows the hole rather than a wrongly dated image. */
@@ -84,8 +91,10 @@ export function renderTimeline(root, years, { onOpen }) {
             </span>
           </button>
           <figcaption class="year__caption">
-            <strong>${esc(d.photoDate || '无可核实影像')}</strong>
-            <span>${esc(d.photoMatch || '')}${d.photoMatch && d.photoVenue ? ' · ' : ''}${esc(d.photoVenue || '')}${d.photoMatch ? ' · ' : ''}${captionSource}</span>
+            ${isSmall
+              ? `<strong>${esc(d.photoDate || '')}</strong>`
+              : `<strong>${esc(d.photoDate || '无可核实影像')}</strong>
+            <span>${esc(d.photoMatch || '')}${d.photoMatch && d.photoVenue ? ' · ' : ''}${esc(d.photoVenue || '')}${d.photoMatch ? ' · ' : ''}${captionSource}</span>`}
           </figcaption>
         </figure>
       </div>
@@ -143,7 +152,6 @@ export function renderTimeline(root, years, { onOpen }) {
       frame.style.width = columnWidth > 0 ? `${cap}px` : '100%';
       frame.dataset.orientation =
         ratio < 0.95 ? (ratio < 0.8 ? 'poster' : 'portrait') : ratio > 1.5 ? 'panorama' : 'landscape';
-      frame.dataset.scale = cap < columnWidth - 4 ? 'native' : 'full';
       // a growable grid track lets a widened plate keep its proportions
       const figure = frame.closest('.year__figure');
       if (figure) figure.style.gridColumn = grew ? '1 / -1' : '';

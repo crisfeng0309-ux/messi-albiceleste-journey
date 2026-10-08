@@ -8,7 +8,7 @@
  * Usage: node scripts/make-credits.mjs
  */
 import { readFile, writeFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -16,6 +16,28 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'source-data', 'photos.json');
 const OUT = path.join(ROOT, 'src', 'data', 'photo-credits.js');
+
+/** read the pixel width out of a JPEG's SOF marker (0 when unreadable) */
+function readJpegWidth(file) {
+  try {
+    const buf = readFileSync(file);
+    let i = 2;
+    while (i < buf.length - 9) {
+      if (buf[i] !== 0xff) {
+        i++;
+        continue;
+      }
+      const marker = buf[i + 1];
+      if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
+        return buf.readUInt16BE(i + 7);
+      }
+      i += 2 + buf.readUInt16BE(i + 2);
+    }
+  } catch {
+    /* fall through */
+  }
+  return 0;
+}
 
 const records = JSON.parse(await readFile(SRC, 'utf8'));
 const byYear = new Map(records.map((r) => [Number(r.year), r]));
@@ -46,9 +68,16 @@ for (const year of Array.from(byYear.keys()).sort((a, b) => a - b)) {
   // a 900px variant only exists when scripts/optimize-photos.mjs produced one
   const small = `assets/photos/${year}-900.jpg`;
   const hasSmall = verified && existsSync(path.join(ROOT, small));
+  /**
+   * Record the delivered photograph's real pixel width so the page can decide
+   * whether it is safe to draw at column width (src/ui/timeline.js shortens the
+   * caption and caps the drawn width for genuinely small files).
+   */
+  const jpegWidth = verified ? readJpegWidth(path.join(ROOT, 'assets', 'photos', `${year}.jpg`)) : 0;
   const fields = {
     photo: `assets/photos/${year}.jpg`,
     photoSmall: hasSmall ? small : '',
+    photoWidth: jpegWidth,
     photoDate: verified ? r.photoDate : '',
     photoEvent: r.photoEvent || '',
     photoMatch: r.photoMatch || '',
