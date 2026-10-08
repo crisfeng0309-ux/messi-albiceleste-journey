@@ -174,6 +174,36 @@ if (existsSync(built)) {
   console.log('  (dist/index.html not built yet — run node scripts/build.mjs)');
 }
 
+/* the guide must not be skipped: entering the journey lands on the guide, and the
+   guide precedes the first year in the timeline */
+console.log('\n— the guide is the landing place, not a flash-by —');
+const mainJs = readFileSync(path.join(ROOT, 'src', 'main.js'), 'utf8');
+const enterFn = /function enter\(\)\s*\{([\s\S]*?)\n\}/.exec(mainJs);
+check(Boolean(enterFn), 'the enter handler exists');
+if (enterFn) {
+  check(/#how-to/.test(enterFn[1]), 'entering the journey targets the guide');
+  check(
+    enterFn[1].indexOf('#how-to') < enterFn[1].indexOf('year-${YEARS[0].year}'),
+    'the guide is preferred over jumping to the first year'
+  );
+  check(!/document\.getElementById\(`year-\$\{YEARS\[0\]\.year\}`\);\s*$/.test(enterFn[1]), 'it no longer jumps straight to 2005');
+}
+/* an explicit #<year> link must still open that year directly */
+check(/openFromHash/.test(mainJs), 'a deep link still opens the requested year');
+
+/* and the guide must be visible the moment it is scrolled to — no reveal gate */
+const guideRule = /(^|\})\s*\.ex-guide\s*\{([\s\S]*?)\}/.exec(cssClean);
+check(Boolean(guideRule), 'the guide has its own rule');
+if (guideRule) {
+  check(!/opacity\s*:\s*0\b/.test(guideRule[2]), 'the guide is not hidden until some event fires');
+  check(!/display\s*:\s*none/.test(guideRule[2]), 'the guide is not display:none');
+  check(/padding/.test(guideRule[2]), 'the guide carries its own breathing room at the top');
+}
+
+/* a reload that restores a scrolled position must not leave an empty page */
+check(/function syncCover/.test(mainJs), 'the cover state is synced to the scroll position');
+check(/window\.addEventListener\('scroll', syncCover/.test(mainJs), 'the sync runs on scroll');
+
 /* ---- 6. colour discipline ------------------------------------------------ */
 console.log('\n— colour —');
 check(/#C9A961/i.test(cssClean), 'gold appears (used only as the 2022 / accent tone)');

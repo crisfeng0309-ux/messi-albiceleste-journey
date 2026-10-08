@@ -152,20 +152,52 @@ if (!openFromHash()) {
 }
 
 /* ------------------------------------------------------------ enter view -- */
+/**
+ * Entering the journey lands on the VISITOR'S GUIDE, not on the first year.
+ *
+ * The guide sits at the top of the timeline and explains how to use everything —
+ * jumping straight past it to 2005 made it flash by unseen, which is worse than
+ * having no guide at all. From the guide the reader simply continues downward to
+ * 2005 as the page naturally scrolls.
+ *
+ * A `#<year>` in the URL still opens that year directly: an explicit destination
+ * must win over the default landing place.
+ */
 function enter() {
   journey.hidden = false;
   document.body.classList.add('entered');
   requestAnimationFrame(() => {
-    const first = document.getElementById(`year-${YEARS[0].year}`);
-    if (first) {
-      const y = first.getBoundingClientRect().top + window.scrollY - 24;
+    const guide = $('#how-to');
+    const target = guide || document.getElementById(`year-${YEARS[0].year}`);
+    if (target) {
+      const y = target.getBoundingClientRect().top + window.scrollY - 8;
       window.scrollTo({ top: y, behavior: 'smooth' });
     } else {
       journey.scrollIntoView({ behavior: 'smooth' });
     }
     hero.setAttribute('aria-hidden', 'true');
+
+    /* Hide the cover once it has been left behind, and restore it if the reader
+       scrolls back up. Doing this on every scroll position also means a page that
+       loads already scrolled (a refresh further down) is never left with an
+       hidden timeline — the previous version only revealed it on click. */
+    syncCover();
   });
 }
+
+/**
+ * The timeline is revealed by `journey.hidden = false`. If a reload restores a
+ * scroll position below the cover, that flag was never set and the page appeared
+ * empty; syncing it to the scroll position fixes that, and lets the cover step
+ * aside without being clipped.
+ */
+function syncCover() {
+  const past = window.scrollY > window.innerHeight * 0.7;
+  if (past && journey.hidden) journey.hidden = false;
+  document.body.classList.toggle('entered', past || !journey.hidden);
+}
+window.addEventListener('scroll', syncCover, { passive: true });
+syncCover();
 
 $('#enter')?.addEventListener('click', enter);
 
