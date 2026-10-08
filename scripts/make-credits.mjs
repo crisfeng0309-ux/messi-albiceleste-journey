@@ -21,9 +21,18 @@ const records = JSON.parse(await readFile(SRC, 'utf8'));
 const byYear = new Map(records.map((r) => [Number(r.year), r]));
 
 const lines = [];
+const problems = [];
 for (const year of Array.from(byYear.keys()).sort((a, b) => a - b)) {
   const r = byYear.get(year);
-  const verified = Boolean(r.found && r.photoDate && r.photoEvent && r.confidence && r.confidence !== 'low' && (r.thumbUrl || r.fileUrl));
+  // `found` must be explicit: a record with a date but no `found: true` flag is
+  // treated as a gap, and that silently blanks the date in the UI.
+  if (r.photoDate && r.found !== true) {
+    problems.push(`${year}: has photoDate ${r.photoDate} but found !== true`);
+  }
+  if (r.found === true && !r.photoDate) {
+    problems.push(`${year}: found is true but photoDate is missing`);
+  }
+  const verified = Boolean(r.found === true && r.photoDate && r.photoEvent && r.confidence && r.confidence !== 'low' && (r.thumbUrl || r.fileUrl || r.pageUrl));
   // a 900px variant only exists when scripts/optimize-photos.mjs produced one
   const small = `assets/photos/${year}-900.jpg`;
   const hasSmall = verified && existsSync(path.join(ROOT, small));
@@ -62,4 +71,10 @@ ${lines.join('\n')}
 `;
 
 await writeFile(OUT, body);
-console.log(`Wrote ${OUT} with ${byYear.size} years (${[...byYear.values()].filter((r) => r.photoDate).length} dated).`);
+console.log(`Wrote ${OUT} with ${byYear.size} years (${[...byYear.values()].filter((r) => r.found === true).length} verified).`);
+if (problems.length) {
+  console.error(`\n✗ ${problems.length} inconsistent photo record(s) in source-data/photos.json:`);
+  for (const p of problems) console.error(`  - ${p}`);
+  console.error('  a record needs BOTH "found": true and a photoDate to count as verified');
+  process.exit(1);
+}
