@@ -31,7 +31,6 @@ export function renderTimeline(root, years, { onOpen }) {
     if (i % 2 === 1) section.classList.add('year--flip');
 
     const photoCount = d.photoCount || 1;
-    const captionSource = d.photoSource ? esc(d.photoSource) : '公开图片资料';
 
     /* Years with no verifiable free photograph get a designed plate that names
        the gap. The museum shows the hole rather than a wrongly dated image. */
@@ -85,7 +84,7 @@ export function renderTimeline(root, years, { onOpen }) {
           </button>
           <figcaption class="year__caption">
             <strong>${esc(d.photoDate || '无可核实影像')}</strong>
-            <span>${esc(d.photoMatch || d.photoEvent || '')}${d.photoVenue ? ` · ${esc(d.photoVenue)}` : ''} · ${captionSource}</span>
+            <span>${esc(d.photoMatch || d.photoEvent || '')}${d.photoVenue ? ` · ${esc(d.photoVenue)}` : ''}</span>
           </figcaption>
         </figure>
       </div>
