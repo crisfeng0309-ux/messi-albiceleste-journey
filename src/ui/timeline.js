@@ -96,15 +96,24 @@ export function renderTimeline(root, years, { onOpen }) {
 
   root.appendChild(frag);
 
-  // Once a photograph loads, let the frame adopt its real proportions so a
-  // portrait archive image is not cropped into a letterbox.
+  /**
+   * Let every frame take its photograph's own proportions.
+   *
+   * The museum is meant to be leafed through like a book of plates, so a portrait
+   * frame is a tall plate and a landscape frame is a wide one — one uniform card
+   * size for all 22 years would flatten exactly the thing the design is about
+   * (a boy becoming a man, seen through differently shaped pictures).
+   */
   root.querySelectorAll('.year__frame img').forEach((img) => {
     const adopt = () => {
       if (!img.naturalWidth || !img.naturalHeight) return;
       const ratio = img.naturalWidth / img.naturalHeight;
       const frame = img.closest('.year__frame');
       if (!frame) return;
-      frame.style.setProperty('--photo-ar', String(Math.min(1.6, Math.max(0.8, ratio))));
+      // keep an extreme panorama/column from wrecking the page rhythm
+      const clamped = Math.min(1.9, Math.max(0.58, ratio));
+      frame.style.setProperty('--photo-ar', String(clamped));
+      frame.dataset.orientation = ratio < 0.95 ? 'portrait' : ratio > 1.5 ? 'panorama' : 'landscape';
     };
     if (img.complete) adopt();
     else img.addEventListener('load', adopt, { once: true });

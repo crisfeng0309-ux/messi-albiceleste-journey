@@ -32,7 +32,17 @@ for (const year of Array.from(byYear.keys()).sort((a, b) => a - b)) {
   if (r.found === true && !r.photoDate) {
     problems.push(`${year}: found is true but photoDate is missing`);
   }
-  const verified = Boolean(r.found === true && r.photoDate && r.photoEvent && r.confidence && r.confidence !== 'low' && (r.thumbUrl || r.fileUrl || r.pageUrl));
+  /**
+   * A year counts as verified when its photograph is tied to a dated fixture AND
+   * its provenance is recorded. Provenance means EITHER a source URL (a file
+   * fetched from a public repository) OR an explicit declaration (a photograph
+   * supplied directly, with a stated source/author/licence). Requiring a URL
+   * would wrongly mark every hand-supplied photograph as unverified.
+   */
+  const hasProvenance = Boolean(r.thumbUrl || r.fileUrl || r.pageUrl || r.source || r.author || r.license);
+  const verified = Boolean(
+    r.found === true && r.photoDate && r.photoEvent && r.confidence && r.confidence !== 'low' && hasProvenance
+  );
   // a 900px variant only exists when scripts/optimize-photos.mjs produced one
   const small = `assets/photos/${year}-900.jpg`;
   const hasSmall = verified && existsSync(path.join(ROOT, small));

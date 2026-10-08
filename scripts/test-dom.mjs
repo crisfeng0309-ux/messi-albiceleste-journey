@@ -267,33 +267,42 @@ check(mount.querySelectorAll('.year__node').length === 22, 'every year has a nod
 check(mount.querySelectorAll('.year__frame').length === 22, 'every year has exactly one photo frame');
 check(mount.querySelectorAll('.year__frame-plate').length === 22, 'every photo carries an event + age plate');
 
-/* Photos vs documented archive gaps */
+/* Photos vs documented archive gaps — derived from the data, not hardcoded, so
+   swapping a photograph in or out never breaks the suite. */
 const frameImgs = mount.querySelectorAll('.year__frame img');
 const gapFrames = mount.querySelectorAll('.year__frame--gap');
 const gapYears = gapFrames.map((f) => f.closest('.year').getAttribute('data-year'));
 const photoYears = frameImgs.map((i) => i.closest('.year').getAttribute('data-year'));
+const dataPhotoYears = YEARS.filter((d) => d.hasPhoto).map((d) => String(d.year));
+const dataGapYears = YEARS.filter((d) => !d.hasPhoto).map((d) => String(d.year));
+
 check(
   frameImgs.length + gapFrames.length === 22,
   `every frame is either a verified photo or a documented gap (${frameImgs.length} photos + ${gapFrames.length} gaps)`
 );
 check(gapFrames.every((f) => /Archive gap/i.test(f.textContent)), 'gap plates are labelled as archive gaps');
-check(gapYears.includes('2005') && gapYears.includes('2021'), '2005 and 2021 are handled as gaps, not filled with wrong years');
-check(!photoYears.includes('2005'), 'no photograph is attached to a year that has none verified');
+check(
+  photoYears.join() === dataPhotoYears.join(),
+  `rendered photo years match the data (${dataPhotoYears.join(', ')})`
+);
+check(gapYears.join() === dataGapYears.join(), `rendered gap years match the data (${dataGapYears.join(', ')})`);
 
 const first = mount.querySelectorAll('.year')[0];
 check(first.getAttribute('data-year') === '2005', 'the axis starts at 2005');
 const last = mount.querySelectorAll('.year').at(-1);
 check(last.getAttribute('data-year') === '2026', 'the axis ends at 2026');
 
-check(photoYears.includes('2007') && photoYears.includes('2022'), 'photo years include 2007 and 2022');
-check(frameImgs[0].getAttribute('src') === 'assets/photos/2007.jpg', `first photograph is the 2007 photo (got ${frameImgs[0].getAttribute('src')})`);
-check(photoYears.includes('2026'), 'the final chapter carries a verified 2026 photograph');
+check(frameImgs[0].getAttribute('src') === YEARS.find((d) => d.hasPhoto).photo, `the first photograph on the axis is served (${frameImgs[0].getAttribute('src')})`);
 check(frameImgs.at(-1).getAttribute('src') === 'assets/photos/2026.jpg', 'last photograph is the 2026 photo');
 // eager/lazy is decided per year index, so check the mapping explicitly
 const loadingByYear = new Map(
   frameImgs.map((i) => [i.closest('.year').getAttribute('data-year'), i.getAttribute('loading')])
 );
-check(loadingByYear.get('2007') === 'eager' && loadingByYear.get('2008') === 'eager', 'the first photographs load eagerly (fast first paint)');
+const firstTwoPhotoYears = dataPhotoYears.slice(0, 2);
+check(
+  firstTwoPhotoYears.every((y) => loadingByYear.get(y) === 'eager'),
+  `the first photographs load eagerly (${firstTwoPhotoYears.join(', ')})`
+);
 check(
   [...loadingByYear.entries()].filter(([y]) => Number(y) >= 2012).every(([, l]) => l === 'lazy'),
   'later photographs are lazy-loaded'
@@ -339,8 +348,10 @@ check(panel.querySelectorAll('.dossier__nav button').length === 2, 'the dossier 
 check(document.body.classList.contains('is-locked'), 'opening the dossier locks the page behind it');
 
 /* a gap year explains itself instead of showing an image */
-archive.show(YEARS.findIndex((d) => d.year === 2005));
-check(Boolean(panel.querySelector('.dossier__gap')), 'a gap year renders the archive-gap plate');
+const gapIndex = YEARS.findIndex((d) => !d.hasPhoto);
+archive.show(gapIndex);
+const gapYear = YEARS[gapIndex].year;
+check(Boolean(panel.querySelector('.dossier__gap')), `a gap year (${gapYear}) renders the archive-gap plate`);
 check(!panel.querySelector('.dossier__visual img'), 'a gap year shows no photograph');
 check(/档案缺口/.test(panel.textContent), 'the gap plate explains itself in the reader’s language');
 check(/Commons|检索/.test(panel.textContent), 'the gap records what was searched');

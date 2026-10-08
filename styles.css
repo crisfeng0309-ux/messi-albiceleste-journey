@@ -556,6 +556,21 @@ body.is-ready .hero__hint       { opacity: 1; transform: none; transition-delay:
   transition: transform 2.4s var(--ease), filter 1s var(--ease);
 }
 
+/**
+ * A frame adopts its photograph's proportions (set from the image itself in
+ * src/ui/timeline.js). Because the plates are meant to differ — a portrait frame
+ * is a tall plate, a landscape frame is a wide one — the only guard needed is
+ * that a very tall plate never becomes taller than the screen.
+ */
+.year__frame { max-height: 86svh; }
+
+/* portrait plates: slightly quieter crop anchor, a touch more outline */
+.year__frame[data-orientation='portrait'] {
+  border: 1px solid rgba(237, 230, 214, 0.08);
+}
+
+.year__frame[data-orientation='portrait'] img { object-position: 50% 26%; }
+
 .year.is-seen .year__frame img { transform: scale(1); }
 .year__frame:hover img { transform: scale(1.02); filter: saturate(1) contrast(1.05); }
 

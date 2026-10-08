@@ -29,7 +29,7 @@
  *   · --publish also runs build + publish to the live site.
  *   · Reverting a year to an "archive gap" is done with --gap.
  */
-import { copyFile, readFile, writeFile, stat, mkdir } from 'node:fs/promises';
+import { copyFile, readFile, writeFile, stat, mkdir, chmod } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
@@ -129,6 +129,9 @@ const dest = path.join(ROOT, 'assets', 'photos', `${year}.jpg`);
 await mkdir(path.dirname(dest), { recursive: true });
 const srcInfo = await stat(file);
 await copyFile(file, dest);
+// copyFile preserves the source's mode; a read-only source (common for files
+// exported from an image service) would make the resize step fail with EPERM.
+await chmod(dest, 0o644);
 console.log(`· copied ${path.basename(file)} (${Math.round(srcInfo.size / 1024)} KB) → assets/photos/${year}.jpg`);
 
 /* ---- resize it and build the 900px variant ------------------------------ */

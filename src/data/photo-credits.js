@@ -11,17 +11,17 @@
 export const PHOTO_CREDITS = {
   2005: {
     "photo": "assets/photos/2005.jpg",
-    "photoSmall": "",
-    "photoDate": "",
+    "photoSmall": "assets/photos/2005-900.jpg",
+    "photoDate": "2005-08-17",
     "photoEvent": "友谊赛 · 布达佩斯",
-    "photoMatch": "匈牙利 1—2 阿根廷（首秀）",
-    "photoSource": "公开图片资料",
+    "photoMatch": "匈牙利 1—2 阿根廷 · 首秀",
+    "photoSource": "使用者提供（图片带 Getty Images 水印，署名 Michael Mayhew/Allstar）",
     "photoSourceUrl": "",
-    "photoAuthor": "",
-    "photoLicense": "",
-    "verified": false,
-    "photoFocus": "",
-    "photoNote": "Commons 上没有可核实的 2005 年梅西阿根廷成年国家队照片：Category:Lionel Messi in 2005 仅有两张巴塞罗那照片，当年 8 月 17 日对匈牙利的首秀没有留下自由许可的现场影像。这一页以「档案缺口」的方式呈现 —— 我们不用年份错误的照片填满它。"
+    "photoAuthor": "Michael Mayhew / Allstar（Getty Images）",
+    "photoLicense": "未取得授权 · 使用者确认发布并承担相应责任",
+    "verified": true,
+    "photoFocus": "52% 30%",
+    "photoNote": "核对依据：照片由使用者提供，并声明拍摄于 2005-08-17 阿根廷 vs 匈牙利（梅西成年国家队首秀，18 号）。年份与照片内容（18 号球衣、当时的年龄与发型）一致。来源与授权状态如实记录于此，未作省略。"
   },
   2006: {
     "photo": "assets/photos/2006.jpg",
