@@ -119,18 +119,36 @@ check(/href="#gallery"/.test(home), 'the cover links into the hall');
 check(/id="gallery"/.test(home) || /EXHIBIT:INLINE/.test(home), 'the timeline reserves a place for the hall');
 check(/exhibit\.html/.test(readFileSync(path.join(ROOT, 'scripts', 'build.mjs'), 'utf8')), 'the standalone page ships in the build');
 
-/* after the build the hall must be spliced into the timeline, in order, once */
+/* after the build the hall must be spliced into the timeline, in order, once.
+   The intended reading order is: 2005—2026 years → the World Cup hall →
+   the epilogue's closing wall (Gracias, Leo.) → the colophon. The epilogue is the
+   very last thing the visitor sees, so it must come AFTER the hall. */
 const built = path.join(ROOT, 'dist', 'index.html');
 if (existsSync(built)) {
-  const home = readFileSync(built, 'utf8');
-  const epilogueAt = home.indexOf('id="epilogue"');
-  const galleryAt = home.indexOf('id="gallery"');
-  const mainEnd = home.indexOf('</main>');
-  check(epilogueAt >= 0 && galleryAt > epilogueAt, 'in the built page the hall follows the 2005—2026 epilogue');
-  check(galleryAt > 0 && galleryAt < mainEnd, 'the hall sits inside the timeline container');
-  check((home.match(/id="wc2022"/g) || []).length === 1, 'each chapter appears exactly once after splicing');
-  check(/<style>[\s\S]*\.ex-axis/.test(home), 'the hall carries its own styling inline on the timeline');
-  check(!/href="exhibit\.html"/.test(home), 'no leftover link to the standalone page from the cover');
+  const page = readFileSync(built, 'utf8');
+  const pos = {
+    years: page.indexOf('id="years"'),
+    gallery: page.indexOf('id="gallery"'),
+    epilogue: page.indexOf('id="epilogue"'),
+    colophon: page.indexOf('class="colophon"'),
+    mainEnd: page.indexOf('</main>'),
+  };
+  check(pos.years > 0 && pos.gallery > pos.years, 'the hall follows the 2005—2026 timeline');
+  check(pos.epilogue > pos.gallery, 'the closing wall (Gracias, Leo.) comes after the hall — it is the last page');
+  check(pos.colophon > pos.epilogue, 'the colophon closes the document after the wall');
+  check(pos.mainEnd > pos.colophon, 'everything sits inside the timeline container');
+  check((page.match(/id="gallery"/g) || []).length === 1, 'the hall appears exactly once');
+  check((page.match(/id="epilogue"/g) || []).length === 1, 'the closing wall appears exactly once');
+  check((page.match(/id="wc2022"/g) || []).length === 1, 'each chapter appears exactly once after splicing');
+  // only real authoring markers / placeholders count — the guidance comment in
+  // index.html mentions their names in prose and must not trip this
+  check(
+    !/<!--\s*EXHIBIT:(INLINE|START|END)\s*(—|-->)/.test(page),
+    'no authoring markers leak into the built page'
+  );
+  check(/<style>[\s\S]*\.ex-axis/.test(page), 'the hall carries its own styling inline on the timeline');
+  check(/href="#gallery"/.test(page), 'the closing wall links back to the hall');
+  check(!/href="exhibit\.html"/.test(page), 'no leftover link to the standalone page from the cover');
 } else {
   console.log('  (dist/index.html not built yet — run node scripts/build.mjs)');
 }
