@@ -347,14 +347,22 @@ check(/photo verified|photo unverified/.test(panel.innerHTML), 'the dossier stat
 check(panel.querySelectorAll('.dossier__nav button').length === 2, 'the dossier has prev/next navigation');
 check(document.body.classList.contains('is-locked'), 'opening the dossier locks the page behind it');
 
-/* a gap year explains itself instead of showing an image */
+/* A year without a photograph must explain itself rather than show an image.
+   The museum can be complete (no gaps at all), so this only exercises the plate
+   when a gap actually exists — otherwise it asserts that no year pretends to be
+   one. */
 const gapIndex = YEARS.findIndex((d) => !d.hasPhoto);
-archive.show(gapIndex);
-const gapYear = YEARS[gapIndex].year;
-check(Boolean(panel.querySelector('.dossier__gap')), `a gap year (${gapYear}) renders the archive-gap plate`);
-check(!panel.querySelector('.dossier__visual img'), 'a gap year shows no photograph');
-check(/档案缺口/.test(panel.textContent), 'the gap plate explains itself in the reader’s language');
-check(/Commons|检索/.test(panel.textContent), 'the gap records what was searched');
+if (gapIndex >= 0) {
+  const gapYear = YEARS[gapIndex].year;
+  archive.show(gapIndex);
+  check(Boolean(panel.querySelector('.dossier__gap')), `a gap year (${gapYear}) renders the archive-gap plate`);
+  check(!panel.querySelector('.dossier__visual img'), 'a gap year shows no photograph');
+  check(/档案缺口/.test(panel.textContent), 'the gap plate explains itself in the reader’s language');
+  check(/Commons|检索|没有/.test(panel.textContent), 'the gap records what was searched');
+} else {
+  check(YEARS.every((d) => d.hasPhoto), 'every year carries a photograph — there are no archive gaps');
+  check(gapFrames.length === 0, 'no archive-gap plate is rendered on the axis');
+}
 
 const scrollBefore = window.scrollY;
 archive.show(YEARS.findIndex((d) => d.year === 2023));

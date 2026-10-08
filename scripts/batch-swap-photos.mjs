@@ -91,6 +91,7 @@ for (const entry of entries) {
     author: entry.author || '',
     license: entry.license || '未取得授权 · 使用者确认发布并承担相应责任',
     licenseUrl: '',
+    note: entry.note || '',
     whyVerified:
       entry.note ||
       `照片由使用者提供，声明拍摄于 ${entry.date}${entry.event ? `（${entry.event}）` : ''}${entry.match ? `，${entry.match}` : ''}${entry.venue ? `，场地：${entry.venue}` : ''}。用户自述已核对日期与照片年份一致。来源与授权状态如实记录。`,
